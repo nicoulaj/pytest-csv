@@ -1,6 +1,10 @@
 pytest-csv
 ==========
 
+.. image:: https://badges.gitter.im/pytest-csv/Lobby.svg
+   :alt: Join the chat at https://gitter.im/pytest-csv/Lobby
+   :target: https://gitter.im/pytest-csv/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 .. image:: https://img.shields.io/github/tag/nicoulaj/pytest-csv.svg
     :target: https://github.com/nicoulaj/pytest-csv/releases
    :alt: last release

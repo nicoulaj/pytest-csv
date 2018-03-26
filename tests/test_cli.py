@@ -116,3 +116,41 @@ def test_add_columns_01(testdir):
         (HOST, '.+'),
         (USER, '.+'),
     ])
+
+
+def test_custom_delimiter(testdir):
+    testdir.makepyfile('''
+        def test_01():
+            pass
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv',
+                               '--csv-delimiter', '|')
+
+    result.assert_outcomes(passed=1)
+
+    with open('tests.csv') as csv:
+        text = csv.read()
+        assert ',' not in text
+        assert '|' in text
+
+
+def test_custom_quote_char(testdir):
+    testdir.makepyfile('''
+        def test_01():
+            """
+            This is a test.
+            This is a test.
+            This is a test.
+            """
+            pass
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv',
+                               '--csv-quote-char', "'")
+
+    result.assert_outcomes(passed=1)
+
+    with open('tests.csv') as csv:
+        text = csv.read()
+        assert "'This is a test" in text

@@ -24,6 +24,5 @@ pytest-csv
 
 *WORK IN PROGRESS*, remaining work before release:
 
- * add options for CSV delimiter, quote char, quoting style
  * add support for record_property
  * add doc

@@ -27,9 +27,13 @@ from _pytest.mark import MarkInfo
 class CSVReporter(object):
     def __init__(self,
                  csv_path,
-                 columns):
+                 columns,
+                 delimiter,
+                 quote_char):
         self._csv_path = csv_path
         self._columns = columns
+        self._delimiter = delimiter
+        self._quote_char = quote_char
         self._rows = []
 
     @pytest.mark.hookwrapper
@@ -59,7 +63,7 @@ class CSVReporter(object):
                    for column in self._columns}
 
         with open(self._csv_path, 'w') as out:
-            writer = csv.writer(out, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer = csv.writer(out, delimiter=self._delimiter, quotechar=self._quote_char, quoting=csv.QUOTE_MINIMAL)
 
             writer.writerow([header
                              for column in self._columns

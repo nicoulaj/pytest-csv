@@ -49,6 +49,22 @@ def pytest_addoption(parser):
         default=[],
         help='add columns to the default set of columns in output CSV'
     )
+    group.addoption(
+        '--csv-delimiter',
+        dest='csv_delimiter',
+        action='store',
+        metavar='delimiter character',
+        default=',',
+        help='delimiter character to use in CSV files'
+    )
+    group.addoption(
+        '--csv-quote-char',
+        dest='csv_quote_char',
+        action='store',
+        metavar='quoting character',
+        default='"',
+        help='quoting character to use in CSV files'
+    )
 
 
 def pytest_addhooks(pluginmanager):
@@ -57,16 +73,19 @@ def pytest_addhooks(pluginmanager):
 
 def pytest_configure(config):
     csv_path = config.option.csv_path
-    csv_columns = config.option.csv_columns + config.option.csv_add_columns
-
     if csv_path and not hasattr(config, 'slaveinput'):
         columns_registry = dict(BUILTIN_COLUMNS_REGISTRY)
         config.hook.pytest_csv_register_columns(columns=columns_registry)
 
         # TODO improve error handling, if user puts a wrong column name it will raise a KeyError
-        columns = [columns_registry[id.strip()] for ids in csv_columns for id in ids.split(',')]
+        columns = [columns_registry[id.strip()]
+                   for ids in config.option.csv_columns + config.option.csv_add_columns
+                   for id in ids.split(',')]
 
-        config._csv_reporter = CSVReporter(csv_path=csv_path, columns=columns)
+        config._csv_reporter = CSVReporter(csv_path=csv_path,
+                                           columns=columns,
+                                           delimiter=config.option.csv_delimiter,
+                                           quote_char=config.option.csv_quote_char)
         config.pluginmanager.register(config._csv_reporter)
 
 

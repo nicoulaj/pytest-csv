@@ -22,7 +22,7 @@ import os
 import pytest
 import six
 from _pytest.mark import MarkInfo
-from collections import OrderedDict
+
 
 class CSVReporter(object):
     def __init__(self,
@@ -69,6 +69,8 @@ class CSVReporter(object):
                 writer.writerow([row[column].get(header, column.get_default_value())
                                  for column in self._columns
                                  for header in headers[column]])
+
+        session.config.hook.pytest_csv_written(csv_path=self._csv_path)
 
     def pytest_terminal_summary(self, terminalreporter):
         terminalreporter.write_sep('-', 'CSV report: %s' % self._csv_path)

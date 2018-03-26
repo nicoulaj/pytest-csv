@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
+import os
+
 from pytest_csv import *
 from ._utils import assert_csv_equal
 
@@ -47,3 +49,23 @@ def test_register_custom_column(testdir):
         (ID, '.*test_register_custom_column.py::test_01'),
         ('my column', 'my value'),
     ])
+
+
+def test_csv_written(testdir):
+    testdir.makeconftest("""
+        import shutil
+
+        def pytest_csv_written(csv_path):
+            shutil.copy(csv_path, csv_path + '.1')
+        """)
+
+    testdir.makepyfile('''
+        def test_01():
+            pass
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv')
+
+    result.assert_outcomes(passed=1)
+
+    assert os.path.exists('tests.csv.1')

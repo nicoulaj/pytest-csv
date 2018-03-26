@@ -39,3 +39,11 @@ def pytest_csv_register_columns(columns):
 
     :param columns: dictionary of (column id, CSVColumn object)
     """
+
+
+def pytest_csv_written(csv_path):
+    """
+    Called whenever a CSV file has been written.
+
+    :param csv_path: CSV file path
+    """

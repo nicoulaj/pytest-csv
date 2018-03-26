@@ -25,10 +25,9 @@ pytest-csv
 *WORK IN PROGRESS*, remaining work before release:
 
  * add options for CSV delimiter, quote char, quoting style
+ * add --csv-append-columns option
  * add support for record_property
  * add boolean success column
  * add human readable duration column
- * add column that expands parameters into columns
- * add column that expands marks into columns
  * add hook to call user code after CSV has been generated
  * add doc

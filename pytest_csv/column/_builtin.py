@@ -20,12 +20,13 @@ import getpass
 import os
 import platform
 
+import six
 from _pytest.runner import TestReport
 
 from ._api import Column, ConstantColumn
 from ._ids import *
 from ._status import *
-from ._utils import parse_node_id, format_mark_info
+from ._utils import parse_node_id, format_mark_info, format_mark_info_args
 
 
 class IdColumn(Column):
@@ -53,13 +54,6 @@ class FunctionColumn(Column):
         # type: (TestReport) -> str
         mod, cls, func, params = parse_node_id(report.nodeid)
         yield FUNCTION, func or ''
-
-
-class ParamsColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        mod, cls, func, params = parse_node_id(report.nodeid)
-        yield PARAMS, params or ''
 
 
 class NameColumn(Column):
@@ -132,7 +126,44 @@ class MarkersColumn(Column):
 
     def run(self, report):
         # type: (TestReport) -> str
-        yield MARKERS, ','.join(format_mark_info(mark, self.with_args) for mark in getattr(report, 'test_markers', []))
+        yield MARKERS, ','.join(format_mark_info(mark, self.with_args)
+                                for mark in sorted(getattr(report, 'test_markers', []), key=lambda mark: mark.name))
+
+
+class MarkersAsColumns(Column):
+    def run(self, report):
+        # type: (TestReport) -> str
+        for mark in getattr(report, 'test_markers', []):
+            yield mark.name, format_mark_info_args(mark) or str(True)
+
+
+class MarkersArgumentsAsColumns(Column):
+    def __init__(self, with_args):
+        self.with_args = with_args
+
+    def run(self, report):
+        # type: (TestReport) -> str
+        for mark in getattr(report, 'test_markers', []):
+            if not mark.args and not mark.kwargs:
+                yield mark.name, str(True)
+            else:
+                for i, arg in enumerate(mark.args):
+                    yield '%s.%i' % (mark.name, i), str(arg)
+                for name, value in six.iteritems(mark.kwargs):
+                    yield '%s.%s' % (mark.name, name), str(value)
+
+
+class ParametersColumn(Column):
+    def run(self, report):
+        # type: (TestReport) -> str
+        yield PARAMETERS, ','.join('%s=%s' % (k, v) for k, v in sorted(six.iteritems(getattr(report, 'test_args', {}))))
+
+
+class ParametersAsColumns(Column):
+    def run(self, report):
+        # type: (TestReport) -> str
+        for name, value in six.iteritems(getattr(report, 'test_args', {})):
+            yield name, str(value)
 
 
 class HostColumn(ConstantColumn):

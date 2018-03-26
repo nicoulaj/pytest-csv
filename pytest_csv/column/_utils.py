@@ -36,9 +36,13 @@ def parse_node_id(node_id):
 
 
 def format_mark_info(mark, with_args=True):
-    if not with_args or not mark.args or not mark.kwargs:
+    if not with_args or (not mark.args and not mark.kwargs):
         return mark.name
-    return '%s(%s)' % (
-        mark.name,
-        ','.join(chain((str(arg) for arg in mark.args), ('%s=%s' % (k, v) for k, v in six.iteritems(mark.kwargs))))
-    )
+    return '%s(%s)' % (mark.name, format_mark_info_args(mark))
+
+
+def format_mark_info_args(mark):
+    return ','.join(chain(
+        (str(arg) for arg in mark.args),
+        ('%s=%s' % (k, v) for k, v in sorted(six.iteritems(mark.kwargs)))
+    ))

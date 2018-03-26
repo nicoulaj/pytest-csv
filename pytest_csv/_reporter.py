@@ -22,7 +22,7 @@ import os
 import pytest
 import six
 from _pytest.mark import MarkInfo
-
+from collections import OrderedDict
 
 class CSVReporter(object):
     def __init__(self,
@@ -37,8 +37,8 @@ class CSVReporter(object):
         outcome = yield
         report = outcome.get_result()
         report.test_doc = item.obj.__doc__ or ''
-        report.test_markers = list(sorted((v for v in six.itervalues(item.keywords) if isinstance(v, MarkInfo)),
-                                          key=lambda mark: mark.name))
+        report.test_args = item.funcargs
+        report.test_markers = [v for v in six.itervalues(item.keywords) if isinstance(v, MarkInfo)]
 
     def pytest_runtest_logreport(self, report):
         if report.when != 'call' and report.passed:

@@ -35,11 +35,11 @@ def test_column(testdir, column):
             pass
     ''')
 
-    result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', column)
+    result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', ID, column)
 
     result.assert_outcomes(passed=1)
 
-    assert_csv_equal('tests.csv', [(column, r'.*')])
+    assert_csv_equal('tests.csv', [(ID, r'.*test_01'), (column, r'.*')])
 
 
 def test_all_columns_enabled(testdir):
@@ -62,8 +62,8 @@ def test_column_duplicated(testdir, column):
             pass
     ''')
 
-    result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', column + ',' + column)
+    result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', ID, column, column)
 
     result.assert_outcomes(passed=1)
 
-    assert_csv_equal('tests.csv', [(column, r'.*')])
+    assert_csv_equal('tests.csv', [(ID, r'.*test_01'), (column, r'.*')])

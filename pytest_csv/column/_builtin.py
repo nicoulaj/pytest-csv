@@ -176,6 +176,19 @@ class ParametersAsColumns(Column):
             yield name, str(value)
 
 
+class PropertiesColumn(Column):
+    def run(self, report):
+        # type: (TestReport) -> str
+        yield PROPERTIES, ','.join('%s=%s' % (k, v) for k, v in sorted(getattr(report, 'user_properties', [])))
+
+
+class PropertiesAsColumns(Column):
+    def run(self, report):
+        # type: (TestReport) -> str
+        for name, value in sorted(getattr(report, 'user_properties', [])):
+            yield name, str(value)
+
+
 class HostColumn(ConstantColumn):
     def __init__(self):
         super(HostColumn, self).__init__(HOST, platform.node())

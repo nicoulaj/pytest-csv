@@ -36,6 +36,8 @@ BUILTIN_COLUMNS_REGISTRY = {
     MARKERS_ARGS_AS_COLUMNS: MarkersArgumentsAsColumns(),
     PARAMETERS: ParametersColumn(),
     PARAMETERS_AS_COLUMNS: ParametersAsColumns(),
+    PROPERTIES: PropertiesColumn(),
+    PROPERTIES_AS_COLUMNS: PropertiesAsColumns(),
     HOST: HostColumn(),
     USER: UserColumn(),
     SYSTEM: SystemColumn(),

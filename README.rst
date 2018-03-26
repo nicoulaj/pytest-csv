@@ -24,5 +24,4 @@ pytest-csv
 
 *WORK IN PROGRESS*, remaining work before release:
 
- * add support for record_property
  * add doc

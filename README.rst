@@ -1,20 +1,20 @@
 pytest-csv
 ==========
 
-.. image:: https://img.shields.io/github/tag/nicoulaj/pytest-csv.svg
-    :target: https://github.com/nicoulaj/pytest-csv/releases
+.. image:: https://img.shields.io/pypi/v/pytest-csv.svg
+   :target: https://pypi.python.org/pypi/pytest-csv
    :alt: last release
 
 .. image:: https://img.shields.io/pypi/pyversions/pytest-csv.svg
-    :target: https://pypi.python.org/pypi/pytest-csv
+   :target: https://pypi.python.org/pypi/pytest-csv
    :alt: pypi package
 
 .. image:: https://img.shields.io/badge/pytest-3.2%2B-green.svg
-    :target: https://pytest.org
+   :target: https://pytest.org
    :alt: pytest supported versions
 
 .. image:: https://travis-ci.org/nicoulaj/pytest-csv.svg?branch=master
-    :target: https://travis-ci.org/nicoulaj/pytest-csv
+   :target: https://travis-ci.org/nicoulaj/pytest-csv
    :alt: continuous integration
 
 ----

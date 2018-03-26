@@ -90,3 +90,29 @@ def test_custom_columns_04(testdir):
         (NAME, 'test_01'),
         (STATUS, PASSED),
     ])
+
+
+def test_add_columns_01(testdir):
+    testdir.makepyfile('''
+        def test_01():
+            pass
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv',
+                               '--csv-add-columns', 'host,user')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_add_columns_01.py::test_01'),
+        (MODULE, r'.*test_add_columns_01'),
+        (NAME, 'test_01'),
+        (FILE, r'.*test_add_columns_01.py'),
+        (DOC, ''),
+        (MARKERS, ''),
+        (STATUS, PASSED),
+        (MESSAGE, ''),
+        (DURATION, r'.*'),
+        (HOST, '.+'),
+        (USER, '.+'),
+    ])

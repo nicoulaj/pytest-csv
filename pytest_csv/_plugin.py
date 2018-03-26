@@ -40,6 +40,15 @@ def pytest_addoption(parser):
         default=[ID, MODULE, NAME, FILE, DOC, MARKERS, STATUS, MESSAGE, DURATION],
         help='define columns in output CSV'
     )
+    group.addoption(
+        '--csv-add-columns',
+        dest='csv_add_columns',
+        action='store',
+        type=str,
+        nargs='+',
+        default=[],
+        help='add columns to the default set of columns in output CSV'
+    )
 
 
 def pytest_addhooks(pluginmanager):
@@ -48,12 +57,13 @@ def pytest_addhooks(pluginmanager):
 
 def pytest_configure(config):
     csv_path = config.option.csv_path
-    csv_columns = config.option.csv_columns
+    csv_columns = config.option.csv_columns + config.option.csv_add_columns
 
     if csv_path and not hasattr(config, 'slaveinput'):
         columns_registry = dict(BUILTIN_COLUMNS_REGISTRY)
         config.hook.pytest_csv_register_columns(columns=columns_registry)
 
+        # TODO improve error handling, if user puts a wrong column name it will raise a KeyError
         columns = [columns_registry[id.strip()] for ids in csv_columns for id in ids.split(',')]
 
         config._csv_reporter = CSVReporter(csv_path=csv_path, columns=columns)

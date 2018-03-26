@@ -16,15 +16,34 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-import pytest
-
 from pytest_csv import *
 from ._utils import assert_csv_equal
 
 
-# TODO add option to assert_csv_equal to make it row order independant
-@pytest.mark.xfail(reason='assert_csv_equal is dependant rows order...')
 def test_with_xdist(testdir):
+    testdir.makepyfile('''
+        def test_01():
+            pass
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv', '-n', '2')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_with_xdist.py::test_01'),
+        (MODULE, r'.*test_with_xdist'),
+        (NAME, 'test_01'),
+        (FILE, r'.*test_with_xdist.py'),
+        (DOC, ''),
+        (MARKERS, ''),
+        (STATUS, PASSED),
+        (MESSAGE, ''),
+        (DURATION, r'.*'),
+    ])
+
+
+def test_with_xdist_several_tests(testdir):
     testdir.makepyfile('''
         def test_01():
             pass
@@ -43,10 +62,10 @@ def test_with_xdist(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_xdist.py::test_01'),
-            (MODULE, r'.*test_with_xdist'),
-            (NAME, 'test_01'),
-            (FILE, r'.*test_with_xdist.py'),
+            (ID, '.*test_with_xdist_several_tests.py::test_\d+'),
+            (MODULE, r'.*test_with_xdist_several_tests'),
+            (NAME, 'test_\d+'),
+            (FILE, r'.*test_with_xdist_several_tests.py'),
             (DOC, ''),
             (MARKERS, ''),
             (STATUS, PASSED),
@@ -54,10 +73,10 @@ def test_with_xdist(testdir):
             (DURATION, r'.*'),
         ],
         [
-            (ID, '.*test_with_xdist.py::test_02'),
-            (MODULE, r'.*test_with_xdist'),
-            (NAME, 'test_02'),
-            (FILE, r'.*test_with_xdist.py'),
+            (ID, '.*test_with_xdist_several_tests.py::test_\d+'),
+            (MODULE, r'.*test_with_xdist_several_tests'),
+            (NAME, 'test_\d+'),
+            (FILE, r'.*test_with_xdist_several_tests.py'),
             (DOC, ''),
             (MARKERS, ''),
             (STATUS, PASSED),
@@ -65,10 +84,10 @@ def test_with_xdist(testdir):
             (DURATION, r'.*'),
         ],
         [
-            (ID, '.*test_with_xdist.py::test_03'),
-            (MODULE, r'.*test_with_xdist'),
-            (NAME, 'test_03'),
-            (FILE, r'.*test_with_xdist.py'),
+            (ID, '.*test_with_xdist_several_tests.py::test_\d+'),
+            (MODULE, r'.*test_with_xdist_several_tests'),
+            (NAME, 'test_\d+'),
+            (FILE, r'.*test_with_xdist_several_tests.py'),
             (DOC, ''),
             (MARKERS, ''),
             (STATUS, PASSED),

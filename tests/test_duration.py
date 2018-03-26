@@ -16,29 +16,40 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-ID = 'id'
-MODULE = 'module'
-CLASS = 'class'
-FUNCTION = 'function'
-NAME = 'name'
-FILE = 'file'
-DOC = 'doc'
-STATUS = 'status'
-SUCCESS = 'success'
-DURATION = 'duration'
-DURATION_FORMATTED = 'duration_formatted'
-MESSAGE = 'message'
-MARKERS = 'markers'
-MARKERS_WITH_ARGS = 'markers_with_args'
-MARKERS_AS_COLUMNS = 'markers_as_columns'
-MARKERS_ARGS_AS_COLUMNS = 'markers_args_as_columns'
-PARAMETERS = 'parameters'
-PARAMETERS_AS_COLUMNS = 'parameters_as_columns'
-HOST = 'host'
-USER = 'user'
-SYSTEM = 'system'
-SYSTEM_RELEASE = 'system_release'
-SYSTEM_VERSION = 'system_version'
-PYTHON_IMPLEMENTATION = 'python_implementation'
-PYTHON_VERSION = 'python_version'
-WORKING_DIRECTORY = 'working_directory'
+from pytest_csv import *
+from ._utils import assert_csv_equal
+
+
+def test_duration(testdir):
+    testdir.makepyfile('''
+        import time
+
+        def test_01():
+            time.sleep(0.1)
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'id,duration')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_duration.py::test_01'),
+        (DURATION, r'\d+.\d+'),
+    ])
+
+def test_duration_formatted(testdir):
+    testdir.makepyfile('''
+        import time
+
+        def test_01():
+            time.sleep(0.1)
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'id,duration_formatted')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_duration_formatted.py::test_01'),
+        (DURATION_FORMATTED, r'\d+:\d+:\d+\.\d+'),
+    ])

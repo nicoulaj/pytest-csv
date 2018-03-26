@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
+import datetime
 import getpass
 import os
 import platform
@@ -126,6 +127,12 @@ class DurationColumn(Column):
         yield DURATION, str(getattr(report, 'duration', ''))
 
 
+class DurationFormattedColumn(Column):
+    def run(self, report):
+        # type: (TestReport) -> str
+        yield DURATION_FORMATTED, str(datetime.timedelta(seconds=getattr(report, 'duration', 0)))
+
+
 class MarkersColumn(Column):
     def __init__(self, with_args):
         self.with_args = with_args
@@ -144,9 +151,6 @@ class MarkersAsColumns(Column):
 
 
 class MarkersArgumentsAsColumns(Column):
-    def __init__(self, with_args):
-        self.with_args = with_args
-
     def run(self, report):
         # type: (TestReport) -> str
         for mark in getattr(report, 'test_markers', []):

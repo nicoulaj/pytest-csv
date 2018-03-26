@@ -22,6 +22,8 @@ from ._ids import *
 BUILTIN_COLUMNS_REGISTRY = {
     ID: IdColumn(),
     MODULE: ModuleColumn(),
+    CLASS: ClassColumn(),
+    FUNCTION: FunctionColumn(),
     NAME: NameColumn(),
     FILE: FileColumn(),
     DOC: DocColumn(),

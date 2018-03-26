@@ -33,11 +33,7 @@ setup(
     url='https://github.com/nicoulaj/pytest-csv',
     keywords='py.test pytest csv tsv report',
     classifiers=[
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Testing',
         'Framework :: Pytest',
-        'Environment :: Plugins',
-        'Natural Language :: English',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: POSIX',
@@ -52,7 +48,6 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'License :: OSI Approved :: GNU General Public License (GPL)'
-        'Development Status :: 5 - Production/Stable',
     ],
     packages=find_packages(exclude=['tests*']),
     install_requires=[

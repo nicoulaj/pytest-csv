@@ -86,6 +86,12 @@ class StatusColumn(Column):
             yield STATUS, XFAILED if hasattr(report, 'wasxfail') else SKIPPED
 
 
+class SuccessColumn(Column):
+    def run(self, report):
+        # type: (TestReport) -> str
+        yield SUCCESS, str(bool(report.failed))
+
+
 class MessageColumn(Column):
     def run(self, report):
         # type: (TestReport) -> str

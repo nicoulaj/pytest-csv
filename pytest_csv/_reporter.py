@@ -41,7 +41,7 @@ class CSVReporter(object):
         outcome = yield
         report = outcome.get_result()
         report.test_doc = item.obj.__doc__ or ''
-        report.test_args = item.funcargs
+        report.test_args = item.callspec.params if hasattr(item, 'callspec') else {}
         report.test_markers = [v for v in six.itervalues(item.keywords) if isinstance(v, MarkInfo)]
 
     def pytest_runtest_logreport(self, report):

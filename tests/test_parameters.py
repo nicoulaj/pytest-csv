@@ -143,3 +143,40 @@ def test_with_parameters_as_columns(testdir):
             ('b', 'baz'),
         ]
     )
+
+
+def test_with_parameters_as_columns_and_fixtures(testdir):
+    testdir.makepyfile('''
+        import pytest
+        @pytest.mark.parametrize("a,b", [
+            (1, 'foo'),
+            (4, 'bar'),
+            (5, 'baz'),
+        ])
+        def test_01(request,a,b):
+            assert True
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv',
+                               '--csv-columns', 'id,parameters_as_columns')
+
+    result.assert_outcomes(passed=3)
+
+    assert_csv_equal(
+        'tests.csv',
+        [
+            (ID, '.*test_with_parameters_as_columns_and_fixtures.py::test_01\[1-foo\]'),
+            ('a', '1'),
+            ('b', 'foo'),
+        ],
+        [
+            (ID, '.*test_with_parameters_as_columns_and_fixtures.py::test_01\[4-bar\]'),
+            ('a', '4'),
+            ('b', 'bar'),
+        ],
+        [
+            (ID, '.*test_with_parameters_as_columns_and_fixtures.py::test_01\[5-baz\]'),
+            ('a', '5'),
+            ('b', 'baz'),
+        ]
+    )

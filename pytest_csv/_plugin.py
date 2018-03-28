@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
+from collections import OrderedDict
+
 from . import _hooks
 from ._reporter import CSVReporter
 from .column import *
@@ -78,9 +80,9 @@ def pytest_configure(config):
         config.hook.pytest_csv_register_columns(columns=columns_registry)
 
         # TODO improve error handling, if user puts a wrong column name it will raise a KeyError
-        columns = [columns_registry[id.strip()]
-                   for ids in config.option.csv_columns + config.option.csv_add_columns
-                   for id in ids.split(',')]
+        columns = OrderedDict((id, columns_registry[id.strip()])
+                              for ids in config.option.csv_columns + config.option.csv_add_columns
+                              for id in ids.split(','))
 
         config._csv_reporter = CSVReporter(csv_path=csv_path,
                                            columns=columns,

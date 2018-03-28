@@ -24,18 +24,23 @@ def pytest_csv_register_columns(columns):
     Use it to add your own column types (or override the builtin ones).
 
     For instance, in conftest.py:
-    >>>         from pytest_csv import Column
+    >>> def pytest_csv_register_columns(columns):
     >>>
-    >>>         class MyColumn(Column):
-    >>>             def run(self, report):
-    >>>                 yield 'my column', 'my value'
+    >>>     # constant column
+    >>>     columns['my_constant_column'] = 'foobar'
     >>>
-    >>>         def pytest_csv_register_columns(columns):
-    >>>             columns['my_column'] = MyColumn()
+    >>>     # simple column
+    >>>     columns['my_simple_column'] = lambda report: {'my column': report.nodeid}
+    >>>
+    >>>     # a more complex column type that creates several columns in the CSV
+    >>>     def my_multiple_columns(report):
+    >>>         yield 'my column 1', report.nodeid
+    >>>         yield 'my column 2', 42
+    >>>     columns['my_multiple_columns'] = my_multiple_columns
 
-    Then run pytest with your new column:
+    Then run pytest with your new column id:
 
-        $ py.test --csv tests.csv --csv-columns id,status,my_column
+        $ py.test --csv tests.csv --csv-columns id,status,my_constant_column,my_simple_column,my_multiple_columns
 
     :param columns: dictionary of (column id, CSVColumn object)
     """

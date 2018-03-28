@@ -47,7 +47,8 @@ class CSVReporter(object):
     def pytest_runtest_logreport(self, report):
         if report.when != 'call' and report.passed:
             return
-        self._rows.append({column: dict(column.run(report)) for column in self._columns})
+        self._rows.append({column: dict(column(report)) if callable(column) else {key: str(column)}
+                           for key, column in six.iteritems(self._columns)})
 
     def pytest_sessionfinish(self, session):
         if not self._rows or hasattr(session.config, 'slaveinput'):
@@ -60,18 +61,18 @@ class CSVReporter(object):
         headers = {column: list(sorted(set(header
                                            for row in self._rows
                                            for header in six.iterkeys(row[column]))))
-                   for column in self._columns}
+                   for column in six.itervalues(self._columns)}
 
         with open(self._csv_path, 'w') as out:
             writer = csv.writer(out, delimiter=self._delimiter, quotechar=self._quote_char, quoting=csv.QUOTE_MINIMAL)
 
             writer.writerow([header
-                             for column in self._columns
+                             for column in six.itervalues(self._columns)
                              for header in headers[column]])
 
             for row in self._rows:
-                writer.writerow([row[column].get(header, column.get_default_value())
-                                 for column in self._columns
+                writer.writerow([row[column].get(header, '')
+                                 for column in six.itervalues(self._columns)
                                  for header in headers[column]])
 
         session.config.hook.pytest_csv_written(csv_path=self._csv_path)

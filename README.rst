@@ -40,20 +40,19 @@ Usage
 
     py.test --csv tests.csv
 
-
 * To customize the CSV delimiter/quoting characters:
 
   ::
 
     py.test --csv tests.csv --csv-delimiter ';' --csv-quote-char '"'
 
-
 * To customize the columns:
+
   ::
 
     py.test --csv tests.csv --csv-columns host,function,status,duration,parameters_as_columns
 
-  This is the reference of all available columns:
+* This is the reference of all available columns:
 
   +----------------------------+--------------------------------------------------------------------------+
   | Column                     | Description                                                              |
@@ -115,18 +114,12 @@ Usage
   | ``working_directory``      | current working directory                                                |
   +----------------------------+--------------------------------------------------------------------------+
 
-* To define a new column type, in ``conftest.py``:
+* To define new column types, in ``conftest.py`` (`more examples here<https://github.com/nicoulaj/pytest-csv/blob/master/pytest_csv/_hooks.py#L20>`_):
 
   ::
 
-    from pytest_csv import Column
-
-    class MyColumn(Column):
-        def run(self, report):
-            yield 'my column', 'my value'
-
     def pytest_csv_register_columns(columns):
-        columns['my_column'] = MyColumn()
+        columns['my_simple_column'] = lambda report: {'my column': report.nodeid}
 
 Issues
 ------

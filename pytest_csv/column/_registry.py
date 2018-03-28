@@ -16,36 +16,39 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
+import getpass
+import platform
+
 from ._builtin import *
 from ._ids import *
 
 BUILTIN_COLUMNS_REGISTRY = {
-    ID: IdColumn(),
-    MODULE: ModuleColumn(),
-    CLASS: ClassColumn(),
-    FUNCTION: FunctionColumn(),
-    NAME: NameColumn(),
-    FILE: FileColumn(),
-    DOC: DocColumn(),
-    STATUS: StatusColumn(),
-    SUCCESS: SuccessColumn(),
-    DURATION: DurationColumn(),
-    DURATION_FORMATTED: DurationFormattedColumn(),
-    MESSAGE: MessageColumn(),
-    MARKERS: MarkersColumn(with_args=False),
-    MARKERS_WITH_ARGS: MarkersColumn(with_args=True),
-    MARKERS_AS_COLUMNS: MarkersAsColumns(),
-    MARKERS_ARGS_AS_COLUMNS: MarkersArgumentsAsColumns(),
-    PARAMETERS: ParametersColumn(),
-    PARAMETERS_AS_COLUMNS: ParametersAsColumns(),
-    PROPERTIES: PropertiesColumn(),
-    PROPERTIES_AS_COLUMNS: PropertiesAsColumns(),
-    HOST: HostColumn(),
-    USER: UserColumn(),
-    SYSTEM: SystemColumn(),
-    SYSTEM_RELEASE: SystemReleaseColumn(),
-    SYSTEM_VERSION: SystemVersionColumn(),
-    PYTHON_IMPLEMENTATION: PythonImplementationColumn(),
-    PYTHON_VERSION: PythonVersionColumn(),
-    WORKING_DIRECTORY: WorkingDirectoryColumn()
+    ID: column_id,
+    MODULE: column_module,
+    CLASS: column_class,
+    FUNCTION: column_function,
+    NAME: column_name,
+    FILE: column_file,
+    DOC: column_doc,
+    STATUS: column_status,
+    SUCCESS: column_success,
+    DURATION: column_duration,
+    DURATION_FORMATTED: column_duration_formatted,
+    MESSAGE: column_message,
+    MARKERS: column_markers,
+    MARKERS_WITH_ARGS: column_markers_with_args,
+    MARKERS_AS_COLUMNS: column_markers_as_columns,
+    MARKERS_ARGS_AS_COLUMNS: column_markers_args_as_columns,
+    PARAMETERS: column_parameters,
+    PARAMETERS_AS_COLUMNS: column_parameters_as_columns,
+    PROPERTIES: column_properties,
+    PROPERTIES_AS_COLUMNS: column_properties_as_columns,
+    HOST: platform.node(),
+    USER: getpass.getuser(),
+    SYSTEM: platform.system(),
+    SYSTEM_RELEASE: platform.release(),
+    SYSTEM_VERSION: platform.version(),
+    PYTHON_IMPLEMENTATION: platform.python_implementation(),
+    PYTHON_VERSION: platform.python_version(),
+    WORKING_DIRECTORY: WorkingDirectoryColumn
 }

@@ -17,214 +17,137 @@
 # ----------------------------------------------------------------------
 
 import datetime
-import getpass
 import os
-import platform
 
 import six
-from _pytest.runner import TestReport
 
-from ._api import Column, ConstantColumn
 from ._ids import *
 from ._status import *
 from ._utils import parse_node_id, format_mark_info, format_mark_info_args
 
 
-class IdColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield ID, report.nodeid
+def column_id(report):
+    yield ID, report.nodeid
 
 
-class ModuleColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        mod, cls, func, params = parse_node_id(report.nodeid)
-        yield MODULE, mod or ''
+def column_module(report):
+    mod, cls, func, params = parse_node_id(report.nodeid)
+    yield MODULE, mod or ''
 
 
-class ClassColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        mod, cls, func, params = parse_node_id(report.nodeid)
-        yield CLASS, cls or ''
+def column_class(report):
+    mod, cls, func, params = parse_node_id(report.nodeid)
+    yield CLASS, cls or ''
 
 
-class FunctionColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        mod, cls, func, params = parse_node_id(report.nodeid)
-        yield FUNCTION, func or ''
+def column_function(report):
+    mod, cls, func, params = parse_node_id(report.nodeid)
+    yield FUNCTION, func or ''
 
 
-class NameColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        mod, cls, func, params = parse_node_id(report.nodeid)
-        yield NAME, '%s[%s]' % (func, params) if params else func
+def column_name(report):
+    mod, cls, func, params = parse_node_id(report.nodeid)
+    yield NAME, '%s[%s]' % (func, params) if params else func
 
 
-class FileColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield FILE, report.location[0]
+def column_file(report):
+    yield FILE, report.location[0]
 
 
-class DocColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield DOC, getattr(report, 'test_doc', '').strip()
+def column_doc(report):
+    yield DOC, getattr(report, 'test_doc', '').strip()
 
 
-class StatusColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        if report.passed:
-            yield STATUS, XPASSED if hasattr(report, 'wasxfail') else PASSED
-        elif report.failed:
-            yield STATUS, XFAILED if hasattr(report, 'wasxfail') else ERROR if report.when != 'call' else FAILED
-        elif report.skipped:
-            yield STATUS, XFAILED if hasattr(report, 'wasxfail') else SKIPPED
+def column_status(report):
+    if report.passed:
+        yield STATUS, XPASSED if hasattr(report, 'wasxfail') else PASSED
+    elif report.failed:
+        yield STATUS, XFAILED if hasattr(report, 'wasxfail') else ERROR if report.when != 'call' else FAILED
+    elif report.skipped:
+        yield STATUS, XFAILED if hasattr(report, 'wasxfail') else SKIPPED
 
 
-class SuccessColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield SUCCESS, str(bool(report.failed))
+def column_success(report):
+    yield SUCCESS, str(bool(report.failed))
 
 
-class MessageColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        if report.passed:
-            if hasattr(report, 'wasxfail'):
-                yield MESSAGE, report.wasxfail
+def column_message(report):
+    if report.passed:
+        if hasattr(report, 'wasxfail'):
+            yield MESSAGE, report.wasxfail
+        else:
+            yield MESSAGE, ''
+
+    elif report.failed:
+        if hasattr(report, 'wasxfail'):
+            yield MESSAGE, report.wasxfail
+        else:
+            if hasattr(report.longrepr, 'reprcrash'):
+                yield MESSAGE, report.longrepr.reprcrash.message
+            elif isinstance(report.longrepr, (unicode, str)):
+                yield MESSAGE, report.longrepr
             else:
-                yield MESSAGE, ''
+                yield MESSAGE, str(report.longrepr)
 
-        elif report.failed:
-            if hasattr(report, 'wasxfail'):
-                yield MESSAGE, report.wasxfail
-            else:
-                if hasattr(report.longrepr, 'reprcrash'):
-                    yield MESSAGE, report.longrepr.reprcrash.message
-                elif isinstance(report.longrepr, (unicode, str)):
-                    yield MESSAGE, report.longrepr
-                else:
-                    yield MESSAGE, str(report.longrepr)
-
-        elif report.skipped:
-            if hasattr(report, 'wasxfail'):
-                yield MESSAGE, report.wasxfail
-            else:
-                _, _, message = report.longrepr
-                yield MESSAGE, message
+    elif report.skipped:
+        if hasattr(report, 'wasxfail'):
+            yield MESSAGE, report.wasxfail
+        else:
+            _, _, message = report.longrepr
+            yield MESSAGE, message
 
 
-class DurationColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield DURATION, str(getattr(report, 'duration', ''))
+def column_duration(report):
+    yield DURATION, str(getattr(report, 'duration', ''))
 
 
-class DurationFormattedColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield DURATION_FORMATTED, str(datetime.timedelta(seconds=getattr(report, 'duration', 0)))
+def column_duration_formatted(report):
+    yield DURATION_FORMATTED, str(datetime.timedelta(seconds=getattr(report, 'duration', 0)))
 
 
-class MarkersColumn(Column):
-    def __init__(self, with_args):
-        self.with_args = with_args
-
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield MARKERS, ','.join(format_mark_info(mark, self.with_args)
-                                for mark in sorted(getattr(report, 'test_markers', []), key=lambda mark: mark.name))
+def column_markers(report):
+    yield MARKERS, ','.join(format_mark_info(mark, False)
+                            for mark in sorted(getattr(report, 'test_markers', []), key=lambda mark: mark.name))
 
 
-class MarkersAsColumns(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        for mark in getattr(report, 'test_markers', []):
-            yield mark.name, format_mark_info_args(mark) or str(True)
+def column_markers_with_args(report):
+    yield MARKERS, ','.join(format_mark_info(mark, True)
+                            for mark in sorted(getattr(report, 'test_markers', []), key=lambda mark: mark.name))
 
 
-class MarkersArgumentsAsColumns(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        for mark in getattr(report, 'test_markers', []):
-            if not mark.args and not mark.kwargs:
-                yield mark.name, str(True)
-            else:
-                for i, arg in enumerate(mark.args):
-                    yield '%s.%i' % (mark.name, i), str(arg)
-                for name, value in six.iteritems(mark.kwargs):
-                    yield '%s.%s' % (mark.name, name), str(value)
+def column_markers_as_columns(report):
+    for mark in getattr(report, 'test_markers', []):
+        yield mark.name, format_mark_info_args(mark) or str(True)
 
 
-class ParametersColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield PARAMETERS, ','.join('%s=%s' % (k, v) for k, v in sorted(six.iteritems(getattr(report, 'test_args', {}))))
+def column_markers_args_as_columns(report):
+    for mark in getattr(report, 'test_markers', []):
+        if not mark.args and not mark.kwargs:
+            yield mark.name, str(True)
+        else:
+            for i, arg in enumerate(mark.args):
+                yield '%s.%i' % (mark.name, i), str(arg)
+            for name, value in six.iteritems(mark.kwargs):
+                yield '%s.%s' % (mark.name, name), str(value)
 
 
-class ParametersAsColumns(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        for name, value in six.iteritems(getattr(report, 'test_args', {})):
-            yield name, str(value)
+def column_parameters(report):
+    yield PARAMETERS, ','.join('%s=%s' % (k, v) for k, v in sorted(six.iteritems(getattr(report, 'test_args', {}))))
 
 
-class PropertiesColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield PROPERTIES, ','.join('%s=%s' % (k, v) for k, v in sorted(getattr(report, 'user_properties', [])))
+def column_parameters_as_columns(report):
+    for name, value in six.iteritems(getattr(report, 'test_args', {})):
+        yield name, str(value)
 
 
-class PropertiesAsColumns(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        for name, value in sorted(getattr(report, 'user_properties', [])):
-            yield name, str(value)
+def column_properties(report):
+    yield PROPERTIES, ','.join('%s=%s' % (k, v) for k, v in sorted(getattr(report, 'user_properties', [])))
 
 
-class HostColumn(ConstantColumn):
-    def __init__(self):
-        super(HostColumn, self).__init__(HOST, platform.node())
+def column_properties_as_columns(report):
+    for name, value in sorted(getattr(report, 'user_properties', [])):
+        yield name, str(value)
 
 
-class UserColumn(ConstantColumn):
-    def __init__(self):
-        super(UserColumn, self).__init__(USER, getpass.getuser())
-
-
-class SystemColumn(ConstantColumn):
-    def __init__(self):
-        super(SystemColumn, self).__init__(SYSTEM, platform.system())
-
-
-class SystemReleaseColumn(ConstantColumn):
-    def __init__(self):
-        super(SystemReleaseColumn, self).__init__(SYSTEM_RELEASE, platform.release())
-
-
-class SystemVersionColumn(ConstantColumn):
-    def __init__(self):
-        super(SystemVersionColumn, self).__init__(SYSTEM_VERSION, platform.version())
-
-
-class PythonImplementationColumn(ConstantColumn):
-    def __init__(self):
-        super(PythonImplementationColumn, self).__init__(PYTHON_IMPLEMENTATION, platform.python_implementation())
-
-
-class PythonVersionColumn(ConstantColumn):
-    def __init__(self):
-        super(PythonVersionColumn, self).__init__(PYTHON_VERSION, platform.python_version())
-
-
-class WorkingDirectoryColumn(Column):
-    def run(self, report):
-        # type: (TestReport) -> str
-        yield WORKING_DIRECTORY, os.getcwd()
+def WorkingDirectoryColumn(report):
+    yield WORKING_DIRECTORY, os.getcwd()

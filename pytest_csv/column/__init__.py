@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-from ._api import Column, ConstantColumn
 from ._ids import *
 from ._registry import BUILTIN_COLUMNS_REGISTRY
 from ._status import *

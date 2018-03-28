@@ -21,7 +21,6 @@ from itertools import chain
 
 import six
 
-__PYTHON_EXTENSION__ = re.compile(r'\.py$')
 __NODE_ID__ = re.compile(r'(?P<module>.+)\.py(?:::(?P<class>.+)::.+)?::(?P<function>[^\[]+)(?:\[(?P<params>.*)\])?')
 
 

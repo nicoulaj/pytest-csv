@@ -2,11 +2,11 @@ pytest-csv
 ==========
 
 .. image:: https://img.shields.io/pypi/v/pytest-csv.svg
-   :target: https://pypi.python.org/pypi/pytest-csv
+   :target: https://pypi.org/project/pytest-csv
    :alt: last release
 
 .. image:: https://img.shields.io/pypi/pyversions/pytest-csv.svg
-   :target: https://pypi.python.org/pypi/pytest-csv
+   :target: https://pypi.org/project/pytest-csv
    :alt: pypi package
 
 .. image:: https://img.shields.io/badge/pytest-3.2%2B-green.svg

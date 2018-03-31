@@ -84,7 +84,7 @@ def column_message(report):
         else:
             if hasattr(report.longrepr, 'reprcrash'):
                 yield MESSAGE, report.longrepr.reprcrash.message
-            elif isinstance(report.longrepr, (unicode, str)):
+            elif isinstance(report.longrepr, six.string_types):
                 yield MESSAGE, report.longrepr
             else:
                 yield MESSAGE, str(report.longrepr)

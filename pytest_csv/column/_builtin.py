@@ -68,7 +68,7 @@ def column_status(report):
 
 
 def column_success(report):
-    yield SUCCESS, str(bool(report.failed))
+    yield SUCCESS, str(not bool(report.failed))
 
 
 def column_message(report):

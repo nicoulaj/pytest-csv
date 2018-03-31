@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
+import pytest
+
 from pytest_csv import *
 from ._utils import assert_csv_equal
 
@@ -94,4 +96,117 @@ def test_with_xdist_several_tests(testdir):
             (MESSAGE, ''),
             (DURATION, r'.*'),
         ]
+    )
+
+
+@pytest.mark.xfail(reason="doesn't work...")
+def test_with_xdist_parametrized(testdir):
+    testdir.makepyfile('''
+        import pytest
+        @pytest.mark.parametrize("a,b", [
+            (1, 'foo'),
+            (4, 'bar'),
+            (5, 'baz'),
+        ])
+        def test_01(a,b):
+            assert True
+    ''')
+
+    result = testdir.runpytest('-n', '2',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'id,parameters_as_columns')
+
+    result.assert_outcomes(passed=3)
+
+    assert_csv_equal(
+        'tests.csv',
+        [
+            (ID, '.*test_with_xdist_parametrized.py::test_01\[1-foo\]'),
+            ('a', '1'),
+            ('b', 'foo'),
+        ],
+        [
+            (ID, '.*test_with_xdist_parametrized.py::test_01\[4-bar\]'),
+            ('a', '4'),
+            ('b', 'bar'),
+        ],
+        [
+            (ID, '.*test_with_xdist_parametrized.py::test_01\[5-baz\]'),
+            ('a', '5'),
+            ('b', 'baz'),
+        ]
+    )
+
+
+def test_with_xdist_properties(testdir):
+    testdir.makepyfile('''
+        def test_01(record_property):
+            record_property("example_key", 1415)
+    ''')
+
+    result = testdir.runpytest('-n', '2',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'id,properties_as_columns')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal(
+        'tests.csv',
+        [
+            (ID, '.*test_with_xdist_properties.py::test_01'),
+            ('example_key', '1415')
+        ],
+    )
+
+
+def test_with_xdist_properties_non_serializable(testdir):
+    testdir.makepyfile('''
+        def test_01(record_property):
+        
+            class MyClass(object):
+                pass
+        
+            record_property("example_key", MyClass)
+    ''')
+
+    result = testdir.runpytest('-n', '2',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'id,properties_as_columns')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal(
+        'tests.csv',
+        [
+            (ID, '.*test_with_xdist_properties.py::test_01'),
+            ('example_key', 'MyClass')
+        ],
+    )
+
+
+@pytest.mark.xfail(reason="doesn't work...")
+def test_with_xdist_parametrized_non_serializable_parameters(testdir):
+    testdir.makepyfile('''
+
+        class MyClass(object):
+            pass
+
+        import pytest
+        @pytest.mark.parametrize("a", [MyClass])
+        def test_01(a):
+            assert True
+    ''')
+
+    result = testdir.runpytest('-n', '2',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'id,parameters')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal(
+        'tests.csv',
+        [
+            (ID, '.*test_with_xdist_parametrized_non_serializable_parameters.py::test_01\[MyClass\]'),
+            ('parameters', 'MyClass'),
+        ],
     )

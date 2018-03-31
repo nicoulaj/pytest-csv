@@ -17,6 +17,7 @@
 # ----------------------------------------------------------------------
 
 import pytest
+from _pytest import junitxml
 
 from pytest_csv import *
 from ._utils import assert_csv_equal
@@ -138,6 +139,7 @@ def test_with_xdist_parametrized(testdir):
     )
 
 
+@pytest.mark.skipif(not hasattr(junitxml, 'record_property'), reason='record_property not available')
 def test_with_xdist_properties(testdir):
     testdir.makepyfile('''
         def test_01(record_property):
@@ -159,6 +161,8 @@ def test_with_xdist_properties(testdir):
     )
 
 
+@pytest.mark.skipif(not hasattr(junitxml, 'record_property'), reason='record_property not available')
+@pytest.mark.xfail(reason="not a pytest-csv issue, what you put in record_property must be serializable")
 def test_with_xdist_properties_non_serializable(testdir):
     testdir.makepyfile('''
         def test_01(record_property):
@@ -210,3 +214,83 @@ def test_with_xdist_parametrized_non_serializable_parameters(testdir):
             ('parameters', 'MyClass'),
         ],
     )
+
+
+@pytest.mark.xfail(reason="doesn't work...")
+def test_with_xdist_custom_markers_with_args(testdir):
+    testdir.makepyfile('''
+        import pytest
+
+        @pytest.mark.my_marker_01('foobar')
+        @pytest.mark.my_marker_02(a=45,b='test')
+        @pytest.mark.my_marker_03(21,'foo',a=32,b='test')
+        def test_01():
+            assert True
+    ''')
+
+    result = testdir.runpytest('-n', '2',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'id,markers_with_args')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_with_xdist_custom_markers_with_args.py::test_01'),
+        (MARKERS, 'my_marker_01\(foobar\),my_marker_02\(a=45,b=test\),my_marker_03\(21,foo,a=32,b=test\)'),
+    ])
+
+
+@pytest.mark.xfail(reason="doesn't work...")
+def test_with_xdist_custom_markers_as_columns(testdir):
+    testdir.makepyfile('''
+        import pytest
+
+        @pytest.mark.my_marker_01('foobar')
+        @pytest.mark.my_marker_02(a=32,b='test')
+        @pytest.mark.my_marker_03(21,'foo',a=32,b='test')
+        def test_01():
+            assert True
+    ''')
+
+    result = testdir.runpytest('-n', '2',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'id,markers_as_columns')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_with_xdist_custom_markers_as_columns.py::test_01'),
+        ('my_marker_01', 'foobar'),
+        ('my_marker_02', 'a=32,b=test'),
+        ('my_marker_03', '21,foo,a=32,b=test'),
+    ])
+
+
+@pytest.mark.xfail(reason="doesn't work...")
+def test_with_xdist_custom_markers_args_as_columns(testdir):
+    testdir.makepyfile('''
+        import pytest
+
+        @pytest.mark.my_marker_01('foobar')
+        @pytest.mark.my_marker_02(a=32,b='test')
+        @pytest.mark.my_marker_03(21,'foo',a=32,b='test')
+        def test_01():
+            assert True
+    ''')
+
+    result = testdir.runpytest('-n', '2',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'id,markers_args_as_columns')
+
+    result.assert_outcomes(passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_with_xdist_custom_markers_args_as_columns.py::test_01'),
+        ('my_marker_01.0', 'foobar'),
+        ('my_marker_02.a', '32'),
+        ('my_marker_02.b', 'test'),
+        ('my_marker_03.0', '21'),
+        ('my_marker_03.1', 'foo'),
+        ('my_marker_03.a', '32'),
+        ('my_marker_03.b', 'test'),
+    ])

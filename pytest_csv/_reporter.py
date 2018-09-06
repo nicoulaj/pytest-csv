@@ -21,7 +21,6 @@ import os
 
 import pytest
 import six
-from _pytest.mark import MarkInfo
 
 
 class CSVReporter(object):
@@ -42,7 +41,11 @@ class CSVReporter(object):
         report = outcome.get_result()
         report.test_doc = item.obj.__doc__ or ''
         report.test_args = item.callspec.params if hasattr(item, 'callspec') else {}
-        report.test_markers = [v for v in six.itervalues(item.keywords) if isinstance(v, MarkInfo)]
+        if hasattr(item, 'iter_markers'):
+            report.test_markers = list(item.iter_markers())
+        else:  # pytest <3.8 backward compatibility
+            from _pytest.mark import MarkInfo
+            report.test_markers = [v for v in six.itervalues(item.keywords) if isinstance(v, MarkInfo)]
 
     def pytest_runtest_logreport(self, report):
         if report.when != 'call' and report.passed:

@@ -56,7 +56,7 @@ setup(
     ],
     extras_require={
         'test': [
-            'pytest-xdist>=1.22.2',
+            'pytest-xdist>=1.23.0',
             'tabulate>=0.8.2'
         ]
     },

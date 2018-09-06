@@ -28,8 +28,13 @@ python:
   - 3.5
   - 3.6
   - 3.7
+  - nightly
   - pypy
   - pypy3
+
+matrix:
+  allow_failures:
+  - python: nightly
 
 install:
   - pip install tox-travis codeclimate-test-reporter

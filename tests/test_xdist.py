@@ -65,9 +65,9 @@ def test_with_xdist_several_tests(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_xdist_several_tests.py::test_\d+'),
+            (ID, r'.*test_with_xdist_several_tests.py::test_\d+'),
             (MODULE, r'.*test_with_xdist_several_tests'),
-            (NAME, 'test_\d+'),
+            (NAME, r'test_\d+'),
             (FILE, r'.*test_with_xdist_several_tests.py'),
             (DOC, ''),
             (MARKERS, ''),
@@ -76,9 +76,9 @@ def test_with_xdist_several_tests(testdir):
             (DURATION, r'.*'),
         ],
         [
-            (ID, '.*test_with_xdist_several_tests.py::test_\d+'),
+            (ID, r'.*test_with_xdist_several_tests.py::test_\d+'),
             (MODULE, r'.*test_with_xdist_several_tests'),
-            (NAME, 'test_\d+'),
+            (NAME, r'test_\d+'),
             (FILE, r'.*test_with_xdist_several_tests.py'),
             (DOC, ''),
             (MARKERS, ''),
@@ -87,9 +87,9 @@ def test_with_xdist_several_tests(testdir):
             (DURATION, r'.*'),
         ],
         [
-            (ID, '.*test_with_xdist_several_tests.py::test_\d+'),
+            (ID, r'.*test_with_xdist_several_tests.py::test_\d+'),
             (MODULE, r'.*test_with_xdist_several_tests'),
-            (NAME, 'test_\d+'),
+            (NAME, r'test_\d+'),
             (FILE, r'.*test_with_xdist_several_tests.py'),
             (DOC, ''),
             (MARKERS, ''),
@@ -122,17 +122,17 @@ def test_with_xdist_parametrized(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_xdist_parametrized.py::test_01\[1-foo\]'),
+            (ID, r'.*test_with_xdist_parametrized.py::test_01\[1-foo\]'),
             ('a', '1'),
             ('b', 'foo'),
         ],
         [
-            (ID, '.*test_with_xdist_parametrized.py::test_01\[4-bar\]'),
+            (ID, r'.*test_with_xdist_parametrized.py::test_01\[4-bar\]'),
             ('a', '4'),
             ('b', 'bar'),
         ],
         [
-            (ID, '.*test_with_xdist_parametrized.py::test_01\[5-baz\]'),
+            (ID, r'.*test_with_xdist_parametrized.py::test_01\[5-baz\]'),
             ('a', '5'),
             ('b', 'baz'),
         ]
@@ -210,7 +210,7 @@ def test_with_xdist_parametrized_non_serializable_parameters(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_xdist_parametrized_non_serializable_parameters.py::test_01\[MyClass\]'),
+            (ID, r'.*test_with_xdist_parametrized_non_serializable_parameters.py::test_01\[MyClass\]'),
             ('parameters', 'MyClass'),
         ],
     )
@@ -235,8 +235,8 @@ def test_with_xdist_custom_markers_with_args(testdir):
     assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
-        (ID, '.*test_with_xdist_custom_markers_with_args.py::test_01'),
-        (MARKERS, 'my_marker_01\(foobar\),my_marker_02\(a=45,b=test\),my_marker_03\(21,foo,a=32,b=test\)'),
+        (ID, r'.*test_with_xdist_custom_markers_with_args.py::test_01'),
+        (MARKERS, r'my_marker_01\(foobar\),my_marker_02\(a=45,b=test\),my_marker_03\(21,foo,a=32,b=test\)'),
     ])
 
 

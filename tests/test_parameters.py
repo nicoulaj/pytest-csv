@@ -39,9 +39,9 @@ def test_with_parameters(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_parameters.py::test_01\[1-foo\]'),
+            (ID, r'.*test_with_parameters.py::test_01\[1-foo\]'),
             (MODULE, r'.*test_with_parameters'),
-            (NAME, 'test_01\[1-foo\]'),
+            (NAME, r'test_01\[1-foo\]'),
             (FILE, r'.*test_with_parameters.py'),
             (DOC, ''),
             (MARKERS, 'parametrize'),
@@ -50,9 +50,9 @@ def test_with_parameters(testdir):
             (DURATION, r'.*'),
         ],
         [
-            (ID, '.*test_with_parameters.py::test_01\[4-bar\]'),
+            (ID, r'.*test_with_parameters.py::test_01\[4-bar\]'),
             (MODULE, r'.*test_with_parameters'),
-            (NAME, 'test_01\[4-bar\]'),
+            (NAME, r'test_01\[4-bar\]'),
             (FILE, r'.*test_with_parameters.py'),
             (DOC, ''),
             (MARKERS, 'parametrize'),
@@ -61,9 +61,9 @@ def test_with_parameters(testdir):
             (DURATION, r'.*'),
         ],
         [
-            (ID, '.*test_with_parameters.py::test_01\[5-baz\]'),
+            (ID, r'.*test_with_parameters.py::test_01\[5-baz\]'),
             (MODULE, r'.*test_with_parameters'),
-            (NAME, 'test_01\[5-baz\]'),
+            (NAME, r'test_01\[5-baz\]'),
             (FILE, r'.*test_with_parameters.py'),
             (DOC, ''),
             (MARKERS, 'parametrize'),
@@ -94,15 +94,15 @@ def test_with_parameters_column(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_parameters_column.py::test_01\[1-foo\]'),
+            (ID, r'.*test_with_parameters_column.py::test_01\[1-foo\]'),
             (PARAMETERS, 'a=1,b=foo'),
         ],
         [
-            (ID, '.*test_with_parameters_column.py::test_01\[4-bar\]'),
+            (ID, r'.*test_with_parameters_column.py::test_01\[4-bar\]'),
             (PARAMETERS, 'a=4,b=bar'),
         ],
         [
-            (ID, '.*test_with_parameters_column.py::test_01\[5-baz\]'),
+            (ID, r'.*test_with_parameters_column.py::test_01\[5-baz\]'),
             (PARAMETERS, 'a=5,b=baz'),
         ]
     )
@@ -128,17 +128,17 @@ def test_with_parameters_as_columns(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_parameters_as_columns.py::test_01\[1-foo\]'),
+            (ID, r'.*test_with_parameters_as_columns.py::test_01\[1-foo\]'),
             ('a', '1'),
             ('b', 'foo'),
         ],
         [
-            (ID, '.*test_with_parameters_as_columns.py::test_01\[4-bar\]'),
+            (ID, r'.*test_with_parameters_as_columns.py::test_01\[4-bar\]'),
             ('a', '4'),
             ('b', 'bar'),
         ],
         [
-            (ID, '.*test_with_parameters_as_columns.py::test_01\[5-baz\]'),
+            (ID, r'.*test_with_parameters_as_columns.py::test_01\[5-baz\]'),
             ('a', '5'),
             ('b', 'baz'),
         ]
@@ -165,17 +165,17 @@ def test_with_parameters_as_columns_and_fixtures(testdir):
     assert_csv_equal(
         'tests.csv',
         [
-            (ID, '.*test_with_parameters_as_columns_and_fixtures.py::test_01\[1-foo\]'),
+            (ID, r'.*test_with_parameters_as_columns_and_fixtures.py::test_01\[1-foo\]'),
             ('a', '1'),
             ('b', 'foo'),
         ],
         [
-            (ID, '.*test_with_parameters_as_columns_and_fixtures.py::test_01\[4-bar\]'),
+            (ID, r'.*test_with_parameters_as_columns_and_fixtures.py::test_01\[4-bar\]'),
             ('a', '4'),
             ('b', 'bar'),
         ],
         [
-            (ID, '.*test_with_parameters_as_columns_and_fixtures.py::test_01\[5-baz\]'),
+            (ID, r'.*test_with_parameters_as_columns_and_fixtures.py::test_01\[5-baz\]'),
             ('a', '5'),
             ('b', 'baz'),
         ]

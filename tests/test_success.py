@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 
 def test_passed(testdir):
@@ -28,7 +28,7 @@ def test_passed(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'success')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (SUCCESS, 'True'),
@@ -43,7 +43,7 @@ def test_failed(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'success')
 
-    result.assert_outcomes(failed=1)
+    assert_outcomes(result, failed=1)
 
     assert_csv_equal('tests.csv', [
         (SUCCESS, 'False'),
@@ -64,7 +64,7 @@ def test_error(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'success')
 
-    result.assert_outcomes(error=1)
+    assert_outcomes(result, error=1)
 
     assert_csv_equal('tests.csv', [
         (SUCCESS, 'False'),
@@ -82,7 +82,7 @@ def test_skipped(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'success')
 
-    result.assert_outcomes(skipped=1)
+    assert_outcomes(result, skipped=1)
 
     assert_csv_equal('tests.csv', [
         (SUCCESS, 'True'),
@@ -100,7 +100,7 @@ def test_xfail(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'success')
 
-    result.assert_outcomes()
+    assert_outcomes(result, xfailed=1)
 
     assert_csv_equal('tests.csv', [
         (SUCCESS, 'True'),
@@ -118,7 +118,7 @@ def test_xpassed(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'success')
 
-    result.assert_outcomes()
+    assert_outcomes(result, xpassed=1)
 
     assert_csv_equal('tests.csv', [
         (SUCCESS, 'True'),

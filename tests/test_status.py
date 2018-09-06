@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 
 def test_passed(testdir):
@@ -28,7 +28,7 @@ def test_passed(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_passed.py::test_01'),
@@ -51,7 +51,7 @@ def test_failed(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes(failed=1)
+    assert_outcomes(result, failed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_failed.py::test_01'),
@@ -80,7 +80,7 @@ def test_error(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes(error=1)
+    assert_outcomes(result, error=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_error.py::test_01'),
@@ -106,7 +106,7 @@ def test_skipped(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes(skipped=1)
+    assert_outcomes(result, skipped=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_skipped.py::test_01'),
@@ -127,7 +127,6 @@ def test_skipped_whole_module(testdir):
 
         pytestmark = pytest.mark.skip
 
-        @pytest.mark.skip
         def test_01():
             pass
             
@@ -137,7 +136,7 @@ def test_skipped_whole_module(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes(skipped=2)
+    assert_outcomes(result, skipped=2)
 
     assert_csv_equal(
         'tests.csv',
@@ -177,7 +176,7 @@ def test_xfail(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes()
+    assert_outcomes(result, xfailed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_xfail.py::test_01'),
@@ -203,7 +202,7 @@ def test_xpassed(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes()
+    assert_outcomes(result, xpassed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_xpassed.py::test_01'),

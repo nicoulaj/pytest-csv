@@ -16,14 +16,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-import csv
-import re
 from collections import OrderedDict
 
+import csv
+import re
 import six
+from distutils.version import LooseVersion
+from pytest import __version__ as pytest_version
 from tabulate import tabulate
 
 __TAB_ARGS__ = dict(tablefmt='grid', headers='keys', showindex='always')
+
+
+def assert_outcomes(result, passed=0, skipped=0, failed=0, error=0, xpassed=0, xfailed=0):
+    if LooseVersion(pytest_version) < LooseVersion('3.8'):
+        result.assert_outcomes(passed=passed,
+                               skipped=skipped,
+                               failed=failed,
+                               error=error)
+    else:
+        result.assert_outcomes(passed=passed,
+                               skipped=skipped,
+                               failed=failed,
+                               error=error,
+                               xpassed=xpassed,
+                               xfailed=xfailed)
 
 
 def assert_csv_equal(actual_csv_path, *expected_csv_rows):

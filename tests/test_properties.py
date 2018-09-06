@@ -20,7 +20,7 @@ import pytest
 from _pytest import junitxml
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 pytestmark = pytest.mark.skipif(not hasattr(junitxml, 'record_property'), reason='record_property not available')
 
@@ -34,7 +34,7 @@ def test_record_property(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,properties')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_record_property.py::test_01'),
@@ -54,7 +54,7 @@ def test_record_property_as_columns(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,properties_as_columns')
 
-    result.assert_outcomes(passed=2)
+    assert_outcomes(result, passed=2)
 
     assert_csv_equal(
         'tests.csv',

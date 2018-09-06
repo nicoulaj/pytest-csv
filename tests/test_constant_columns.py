@@ -20,7 +20,7 @@ import getpass
 import platform
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 
 def test_column_host(testdir):
@@ -32,7 +32,7 @@ def test_column_host(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module,name,status,host')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_column_host'),
@@ -51,7 +51,7 @@ def test_column_user(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module,name,status,user')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_column_user'),
@@ -70,7 +70,7 @@ def test_column_system(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module,name,status,system')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_column_system'),
@@ -89,7 +89,7 @@ def test_column_python_implementation(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module,name,status,python_implementation')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_column_python_implementation'),
@@ -108,7 +108,7 @@ def test_column_python_version(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module,name,status,python_version')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_column_python_version'),

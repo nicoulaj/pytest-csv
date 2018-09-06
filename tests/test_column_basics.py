@@ -19,7 +19,7 @@
 import pytest
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 STANDARD_COLUMNS = set(BUILTIN_COLUMNS_REGISTRY.keys()) - {MARKERS_WITH_ARGS,
                                                            MARKERS_AS_COLUMNS,
@@ -37,7 +37,7 @@ def test_column(testdir, column):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', ID, column)
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [(ID, r'.*test_01'), (column, r'.*')])
 
@@ -50,7 +50,7 @@ def test_all_columns_enabled(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', ','.join(STANDARD_COLUMNS))
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [(name, r'.*') for name in STANDARD_COLUMNS])
 
@@ -64,6 +64,6 @@ def test_column_duplicated(testdir, column):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', ID, column, column)
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [(ID, r'.*test_01'), (column, r'.*')])

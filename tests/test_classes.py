@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 
 def test_in_class(testdir):
@@ -29,7 +29,7 @@ def test_in_class(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_in_class.py::TestClass::\(\)::test_01'),

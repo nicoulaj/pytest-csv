@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 
 def test_duration(testdir):
@@ -30,7 +30,7 @@ def test_duration(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'id,duration')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_duration.py::test_01'),
@@ -47,7 +47,7 @@ def test_duration_formatted(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '--csv-columns', 'id,duration_formatted')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_duration_formatted.py::test_01'),

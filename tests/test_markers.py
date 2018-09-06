@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv import *
-from ._utils import assert_csv_equal
+from ._utils import assert_csv_equal, assert_outcomes
 
 
 def test_with_custom_markers(testdir):
@@ -32,7 +32,7 @@ def test_with_custom_markers(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_with_custom_markers.py::test_01'),
@@ -61,7 +61,7 @@ def test_with_custom_markers_with_args(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,markers_with_args')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_with_custom_markers_with_args.py::test_01'),
@@ -83,7 +83,7 @@ def test_with_custom_markers_as_columns(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,markers_as_columns')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_with_custom_markers_as_columns.py::test_01'),
@@ -107,7 +107,7 @@ def test_with_custom_markers_args_as_columns(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,markers_args_as_columns')
 
-    result.assert_outcomes(passed=1)
+    assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_with_custom_markers_args_as_columns.py::test_01'),

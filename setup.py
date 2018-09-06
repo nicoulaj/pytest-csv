@@ -24,7 +24,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytest-csv',
-    version='1.1.1',
+    version='1.1.2',
     author='Julien Nicoulaud',
     author_email='julien.nicoulaud@gmail.com',
     description='CSV output for pytest.',

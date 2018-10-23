@@ -18,7 +18,6 @@
 
 import datetime
 import os
-
 import six
 
 from ._ids import *
@@ -149,5 +148,5 @@ def column_properties_as_columns(report):
         yield name, str(value)
 
 
-def WorkingDirectoryColumn(report):
+def column_working_directory(report):
     yield WORKING_DIRECTORY, os.getcwd()

@@ -50,5 +50,5 @@ BUILTIN_COLUMNS_REGISTRY = {
     SYSTEM_VERSION: platform.version(),
     PYTHON_IMPLEMENTATION: platform.python_implementation(),
     PYTHON_VERSION: platform.python_version(),
-    WORKING_DIRECTORY: WorkingDirectoryColumn
+    WORKING_DIRECTORY: column_working_directory
 }

@@ -100,7 +100,7 @@ def test_with_xdist_several_tests(testdir):
     )
 
 
-@pytest.mark.xfail(reason="doesn't work...")
+@pytest.mark.skip(reason="TODO: add support for order independent assert")
 def test_with_xdist_parametrized(testdir):
     testdir.makepyfile('''
         import pytest
@@ -119,7 +119,6 @@ def test_with_xdist_parametrized(testdir):
 
     assert_outcomes(result, passed=3)
 
-    # FIXME #5: add support for order independent assert
     assert_csv_equal(
         'tests.csv',
         [
@@ -216,7 +215,6 @@ def test_with_xdist_parametrized_non_serializable_parameters(testdir):
     )
 
 
-@pytest.mark.xfail(reason="doesn't work...")
 def test_with_xdist_custom_markers_with_args(testdir):
     testdir.makepyfile('''
         import pytest
@@ -240,7 +238,6 @@ def test_with_xdist_custom_markers_with_args(testdir):
     ])
 
 
-@pytest.mark.xfail(reason="doesn't work...")
 def test_with_xdist_custom_markers_as_columns(testdir):
     testdir.makepyfile('''
         import pytest
@@ -266,7 +263,6 @@ def test_with_xdist_custom_markers_as_columns(testdir):
     ])
 
 
-@pytest.mark.xfail(reason="doesn't work...")
 def test_with_xdist_custom_markers_args_as_columns(testdir):
     testdir.makepyfile('''
         import pytest

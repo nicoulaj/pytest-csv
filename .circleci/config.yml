@@ -7,10 +7,10 @@ jobs:
       steps:
         - checkout
         - run:
-            name: install tox
-            command: pip install tox
+            name: Install tox
+            command: sudo pip install tox
         - run:
-            name: run tests
+            name: Run tests
             command: tox
 
 workflows:

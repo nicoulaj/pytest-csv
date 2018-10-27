@@ -16,4 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-from .column import *
+
+__prog__ = 'pytest-csv'
+__author__ = 'Julien Nicoulaud'
+__email__ = 'julien.nicoulaud@gmail.com'
+__url__ = 'https://github.com/nicoulaj/pytest-csv'
+__copyright__ = 'copyright 2018 pytest-csv contributors'
+__license__ = 'GPLv3'
+__description__ = 'CSV output for pytest.'
+__keywords__ = 'py.test pytest csv tsv report'
+__version__ = '1.1.2'

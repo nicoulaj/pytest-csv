@@ -19,19 +19,20 @@
 
 
 import os
-
 from setuptools import setup, find_packages
 
+from pytest_csv import __prog__, __version__, __author__, __email__, __description__, __keywords__, __license__, __url__
+
 setup(
-    name='pytest-csv',
-    version='1.1.2',
-    author='Julien Nicoulaud',
-    author_email='julien.nicoulaud@gmail.com',
-    description='CSV output for pytest.',
+    name=__prog__,
+    version=__version__,
+    author=__author__,
+    author_email=__email__,
+    description=__description__,
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
-    license='GPLv3',
-    url='https://github.com/nicoulaj/pytest-csv',
-    keywords='py.test pytest csv tsv report',
+    license=__license__,
+    url=__url__,
+    keywords=__keywords__,
     classifiers=[
         'Framework :: Pytest',
         'Operating System :: Microsoft :: Windows',
@@ -57,7 +58,7 @@ setup(
     ],
     extras_require={
         'test': [
-            'pytest-xdist>=1.23.0',
+            'pytest-xdist>=1.23.2',
             'tabulate>=0.8.2'
         ]
     },

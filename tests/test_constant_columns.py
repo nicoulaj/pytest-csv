@@ -19,7 +19,7 @@
 import getpass
 import platform
 
-from pytest_csv import *
+from pytest_csv.column import *
 from ._utils import assert_csv_equal, assert_outcomes
 
 

@@ -18,7 +18,7 @@
 
 import os
 
-from pytest_csv import *
+from pytest_csv.column import *
 from ._utils import assert_csv_equal, assert_outcomes
 
 
@@ -47,7 +47,7 @@ def test_register_custom_column_constant(testdir):
 def test_register_custom_column_lambda(testdir):
     testdir.makeconftest("""
         def pytest_csv_register_columns(columns):
-            columns['my_column'] = lambda report: {'my column': report.nodeid}
+            columns['my_column'] = lambda item, report: {'my column': report.nodeid}
         """)
 
     testdir.makepyfile('''
@@ -69,7 +69,7 @@ def test_register_custom_column_lambda(testdir):
 def test_register_custom_column_function(testdir):
     testdir.makeconftest("""
 
-        def my_column(report):
+        def my_column(item, report):
             return {'my column': report.nodeid}
 
         def pytest_csv_register_columns(columns):
@@ -95,7 +95,7 @@ def test_register_custom_column_function(testdir):
 def test_register_custom_column_generator(testdir):
     testdir.makeconftest("""
 
-        def my_columns(report):
+        def my_columns(item, report):
             yield 'my column 1', report.nodeid
             yield 'my column 2', 42
 

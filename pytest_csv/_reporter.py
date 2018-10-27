@@ -39,19 +39,17 @@ class CSVReporter(object):
     def pytest_runtest_makereport(self, item, call):
         outcome = yield
         report = outcome.get_result()
-        report.test_doc = item.obj.__doc__ or ''
-        report.test_args = item.callspec.params if hasattr(item, 'callspec') else {}
-        if hasattr(item, 'iter_markers'):
-            report.test_markers = list(item.iter_markers())
-        else:  # pytest <3.8 backward compatibility
-            from _pytest.mark import MarkInfo
-            report.test_markers = [v for v in six.itervalues(item.keywords) if isinstance(v, MarkInfo)]
 
-    def pytest_runtest_logreport(self, report):
         if report.when != 'call' and report.passed:
             return
-        self._rows.append({column: dict(column(report)) if callable(column) else {key: str(column)}
-                           for key, column in six.iteritems(self._columns)})
+
+        report._csv_rows = {column_id: dict(column(item, report)) if callable(column) else {column_id: str(column)}
+                            for column_id, column in six.iteritems(self._columns)}
+
+    def pytest_runtest_logreport(self, report):
+        rows = getattr(report, '_csv_rows', None)
+        if rows is not None:
+            self._rows.append(rows)
 
     def pytest_sessionfinish(self, session):
         if not self._rows or hasattr(session.config, 'slaveinput'):
@@ -61,22 +59,22 @@ class CSVReporter(object):
         if directory and not os.path.exists(directory):
             os.makedirs(directory)
 
-        headers = {column: list(sorted(set(header
-                                           for row in self._rows
-                                           for header in six.iterkeys(row[column]))))
-                   for column in six.itervalues(self._columns)}
+        headers = {column_id: list(sorted(set(header
+                                              for row in self._rows
+                                              for header in six.iterkeys(row[column_id]))))
+                   for column_id in six.iterkeys(self._columns)}
 
         with open(self._csv_path, 'w') as out:
             writer = csv.writer(out, delimiter=self._delimiter, quotechar=self._quote_char, quoting=csv.QUOTE_MINIMAL)
 
             writer.writerow([header
-                             for column in six.itervalues(self._columns)
-                             for header in headers[column]])
+                             for column_id in six.iterkeys(self._columns)
+                             for header in headers[column_id]])
 
             for row in self._rows:
-                writer.writerow([row[column].get(header, '')
-                                 for column in six.itervalues(self._columns)
-                                 for header in headers[column]])
+                writer.writerow([row[column_id].get(header, '')
+                                 for column_id in six.iterkeys(self._columns)
+                                 for header in headers[column_id]])
 
         session.config.hook.pytest_csv_written(csv_path=self._csv_path)
 

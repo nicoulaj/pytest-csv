@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-from pytest_csv import *
+from pytest_csv.column import *
 from ._utils import assert_csv_equal, assert_outcomes
 
 

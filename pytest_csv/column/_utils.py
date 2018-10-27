@@ -16,9 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-import re
 from itertools import chain
 
+import re
 import six
 
 __NODE_ID__ = re.compile(r'(?P<module>.+)\.py(?:::(?P<class>.+)::.+)?::(?P<function>[^\[]+)(?:\[(?P<params>.*)\])?')
@@ -32,6 +32,23 @@ def parse_node_id(node_id):
                match.group('function'), \
                match.group('params') or ''
     raise Exception('Failed parsing pytest node id: "%s"' % node_id)
+
+
+def get_test_doc(item):
+    return item.obj.__doc__ or ''
+
+
+def get_test_args(item):
+    return item.callspec.params if hasattr(item, 'callspec') else {}
+
+
+def get_test_markers(item):
+    if hasattr(item, 'iter_markers'):
+        return list(item.iter_markers())
+
+    # pytest <3.8 backward compatibility
+    from _pytest.mark import MarkInfo
+    return [v for v in six.itervalues(item.keywords) if isinstance(v, MarkInfo)]
 
 
 def format_mark_info(mark, with_args=True):

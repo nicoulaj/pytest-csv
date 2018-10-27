@@ -30,10 +30,10 @@ def pytest_csv_register_columns(columns):
     >>>     columns['my_constant_column'] = 'foobar'
     >>>
     >>>     # simple column
-    >>>     columns['my_simple_column'] = lambda report: {'my column': report.nodeid}
+    >>>     columns['my_simple_column'] = lambda item, report: {'my column': report.nodeid}
     >>>
     >>>     # a more complex column type that creates several columns in the CSV
-    >>>     def my_multiple_columns(report):
+    >>>     def my_multiple_columns(item, report):
     >>>         yield 'my column 1', report.nodeid
     >>>         yield 'my column 2', 42
     >>>     columns['my_multiple_columns'] = my_multiple_columns

@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-from pytest_csv import *
+from pytest_csv.column import *
 from ._utils import assert_csv_equal, assert_outcomes
 
 
@@ -36,6 +36,7 @@ def test_duration(testdir):
         (ID, '.*test_duration.py::test_01'),
         (DURATION, r'\d+.\d+'),
     ])
+
 
 def test_duration_formatted(testdir):
     testdir.makepyfile('''

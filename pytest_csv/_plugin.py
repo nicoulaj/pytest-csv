@@ -75,14 +75,14 @@ def pytest_addhooks(pluginmanager):
 
 def pytest_configure(config):
     csv_path = config.option.csv_path
-    if csv_path and not hasattr(config, 'slaveinput'):
+    if csv_path:
         columns_registry = dict(BUILTIN_COLUMNS_REGISTRY)
         config.hook.pytest_csv_register_columns(columns=columns_registry)
 
         # TODO improve error handling, if user puts a wrong column name it will raise a KeyError
-        columns = OrderedDict((id, columns_registry[id.strip()])
-                              for ids in config.option.csv_columns + config.option.csv_add_columns
-                              for id in ids.split(','))
+        columns = OrderedDict((column_id, columns_registry[column_id.strip()])
+                              for column_ids in config.option.csv_columns + config.option.csv_add_columns
+                              for column_id in column_ids.split(','))
 
         config._csv_reporter = CSVReporter(csv_path=csv_path,
                                            columns=columns,

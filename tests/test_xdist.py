@@ -19,7 +19,7 @@
 import pytest
 from _pytest import junitxml
 
-from pytest_csv import *
+from pytest_csv.column import *
 from ._utils import assert_csv_equal, assert_outcomes
 
 
@@ -119,6 +119,7 @@ def test_with_xdist_parametrized(testdir):
 
     assert_outcomes(result, passed=3)
 
+    # FIXME #5: add support for order independent assert
     assert_csv_equal(
         'tests.csv',
         [
@@ -188,7 +189,6 @@ def test_with_xdist_properties_non_serializable(testdir):
     )
 
 
-@pytest.mark.xfail(reason="doesn't work...")
 def test_with_xdist_parametrized_non_serializable_parameters(testdir):
     testdir.makepyfile('''
 
@@ -211,7 +211,7 @@ def test_with_xdist_parametrized_non_serializable_parameters(testdir):
         'tests.csv',
         [
             (ID, r'.*test_with_xdist_parametrized_non_serializable_parameters.py::test_01\[MyClass\]'),
-            ('parameters', 'MyClass'),
+            ('parameters', 'a=<class \'test_with_xdist_parametrized_non_serializable_parameters.MyClass\'>'),
         ],
     )
 

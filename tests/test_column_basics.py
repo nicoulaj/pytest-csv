@@ -18,7 +18,7 @@
 
 import pytest
 
-from pytest_csv import *
+from pytest_csv.column import *
 from ._utils import assert_csv_equal, assert_outcomes
 
 STANDARD_COLUMNS = set(BUILTIN_COLUMNS_REGISTRY.keys()) - {MARKERS_WITH_ARGS,

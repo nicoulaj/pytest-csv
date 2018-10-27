@@ -19,7 +19,7 @@
 import pytest
 from _pytest import junitxml
 
-from pytest_csv import *
+from pytest_csv.column import *
 from ._utils import assert_csv_equal, assert_outcomes
 
 pytestmark = pytest.mark.skipif(not hasattr(junitxml, 'record_property'), reason='record_property not available')

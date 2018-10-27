@@ -114,20 +114,20 @@ Usage
   | ``working_directory``      | current working directory                                                |
   +----------------------------+--------------------------------------------------------------------------+
 
-* To define new column types, in ``conftest.py`` (`more examples here <https://github.com/nicoulaj/pytest-csv/blob/master/pytest_csv/_hooks.py#L20>`_):
-
-  ::
-
-    def pytest_csv_register_columns(columns):
-        columns['my_simple_column'] = lambda report: {'my column': report.nodeid}
-
-* To add some data directly from a test function:
+* To add some data directly from a test function, enable `properties_as_columns` and use:
 
   ::
 
     def test_01(record_property):
         record_property('my column 1', 42)
         record_property('my column 2', 'foo bar')
+
+* To define new column types, in ``conftest.py`` (`more examples here <https://github.com/nicoulaj/pytest-csv/blob/master/pytest_csv/_hooks.py#L20>`_):
+
+  ::
+
+    def pytest_csv_register_columns(columns):
+        columns['my_simple_column'] = lambda item, report: {'my column': report.nodeid}
 
 Issues
 ------

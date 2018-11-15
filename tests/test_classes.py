@@ -27,13 +27,15 @@ def test_in_class(testdir):
                 assert True
     ''')
 
-    result = testdir.runpytest('--csv', 'tests.csv')
+    result = testdir.runpytest('--csv', 'tests.csv',
+                               '--csv-columns', 'id,module,class,name,file,doc,markers,status,message,duration')
 
     assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
-        (ID, '.*test_in_class.py::TestClass::\(\)::test_01'),
+        (ID, '.*test_in_class.py::TestClass.*::test_01'),
         (MODULE, r'.*test_in_class'),
+        (CLASS, 'TestClass'),
         (NAME, 'test_01'),
         (FILE, r'.*test_in_class.py'),
         (DOC, ''),

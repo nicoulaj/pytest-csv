@@ -21,7 +21,7 @@ from itertools import chain
 import re
 import six
 
-__NODE_ID__ = re.compile(r'(?P<module>.+)\.py(?:::(?P<class>.+)::.+)?::(?P<function>[^\[]+)(?:\[(?P<params>.*)\])?')
+__NODE_ID__ = re.compile(r'(?P<module>.+)\.py(?:::(?P<class>[^:]+)(?:::.+)?)?::(?P<function>[^\[]+)(?:\[(?P<params>.*)\])?')
 
 
 def parse_node_id(node_id):

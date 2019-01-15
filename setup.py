@@ -53,12 +53,12 @@ setup(
     ],
     packages=find_packages(exclude=['tests*']),
     install_requires=[
-        'pytest>=3.2',
+        'pytest>=3.6',
         'six>=1.0.0'
     ],
     extras_require={
         'test': [
-            'pytest-xdist==1.24.1',
+            'pytest-xdist>=1.26.0',
             'tabulate>=0.8.2'
         ]
     },

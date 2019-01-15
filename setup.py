@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # ----------------------------------------------------------------------
 # pytest-csv - https://github.com/nicoulaj/pytest-csv
-# copyright (c) 2018 pytest-csv contributors
+# copyright (c) 2018-2019 pytest-csv contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

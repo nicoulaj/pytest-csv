@@ -26,101 +26,106 @@ from ._utils import parse_node_id, get_test_doc, get_test_args, get_test_markers
     format_mark_info_args
 
 
-def column_id(item, report):
+def column_id(item, report=None):
     yield ID, item.nodeid
 
 
-def column_module(item, report):
+def column_module(item, report=None):
     mod, cls, func, params = parse_node_id(item.nodeid)
     yield MODULE, mod or ''
 
 
-def column_class(item, report):
+def column_class(item, report=None):
     mod, cls, func, params = parse_node_id(item.nodeid)
     yield CLASS, cls or ''
 
 
-def column_function(item, report):
+def column_function(item, report=None):
     mod, cls, func, params = parse_node_id(item.nodeid)
     yield FUNCTION, func or ''
 
 
-def column_name(item, report):
+def column_name(item, report=None):
     mod, cls, func, params = parse_node_id(item.nodeid)
     yield NAME, '%s[%s]' % (func, params) if params else func
 
 
-def column_file(item, report):
+def column_file(item, report=None):
     yield FILE, item.location[0]
 
 
-def column_doc(item, report):
+def column_doc(item, report=None):
     yield DOC, get_test_doc(item).strip()
 
 
-def column_status(item, report):
-    if report.passed:
-        yield STATUS, XPASSED if hasattr(report, 'wasxfail') else PASSED
-    elif report.failed:
-        yield STATUS, XFAILED if hasattr(report, 'wasxfail') else ERROR if report.when != 'call' else FAILED
-    elif report.skipped:
-        yield STATUS, XFAILED if hasattr(report, 'wasxfail') else SKIPPED
+def column_status(item, report=None):
+    if report is not None:
+        if report.passed:
+            yield STATUS, XPASSED if hasattr(report, 'wasxfail') else PASSED
+        elif report.failed:
+            yield STATUS, XFAILED if hasattr(report, 'wasxfail') else ERROR if report.when != 'call' else FAILED
+        elif report.skipped:
+            yield STATUS, XFAILED if hasattr(report, 'wasxfail') else SKIPPED
 
 
-def column_success(item, report):
-    yield SUCCESS, str(not bool(report.failed))
+def column_success(item, report=None):
+    if report is not None:
+        yield SUCCESS, str(not bool(report.failed))
 
 
-def column_message(item, report):
-    if report.passed:
-        if hasattr(report, 'wasxfail'):
-            yield MESSAGE, report.wasxfail
-        else:
-            yield MESSAGE, ''
-
-    elif report.failed:
-        if hasattr(report, 'wasxfail'):
-            yield MESSAGE, report.wasxfail
-        else:
-            if hasattr(report.longrepr, 'reprcrash'):
-                yield MESSAGE, report.longrepr.reprcrash.message
-            elif isinstance(report.longrepr, six.string_types):
-                yield MESSAGE, report.longrepr
+def column_message(item, report=None):
+    if report is not None:
+        if report.passed:
+            if hasattr(report, 'wasxfail'):
+                yield MESSAGE, report.wasxfail
             else:
-                yield MESSAGE, str(report.longrepr)
+                yield MESSAGE, ''
 
-    elif report.skipped:
-        if hasattr(report, 'wasxfail'):
-            yield MESSAGE, report.wasxfail
-        else:
-            _, _, message = report.longrepr
-            yield MESSAGE, message
+        elif report.failed:
+            if hasattr(report, 'wasxfail'):
+                yield MESSAGE, report.wasxfail
+            else:
+                if hasattr(report.longrepr, 'reprcrash'):
+                    yield MESSAGE, report.longrepr.reprcrash.message
+                elif isinstance(report.longrepr, six.string_types):
+                    yield MESSAGE, report.longrepr
+                else:
+                    yield MESSAGE, str(report.longrepr)
+
+        elif report.skipped:
+            if hasattr(report, 'wasxfail'):
+                yield MESSAGE, report.wasxfail
+            else:
+                _, _, message = report.longrepr
+                yield MESSAGE, message
 
 
-def column_duration(item, report):
-    yield DURATION, str(getattr(report, 'duration', ''))
+def column_duration(item, report=None):
+    if report is not None:
+        yield DURATION, str(getattr(report, 'duration', ''))
 
 
-def column_duration_formatted(item, report):
-    yield DURATION_FORMATTED, str(datetime.timedelta(seconds=getattr(report, 'duration', 0)))
+def column_duration_formatted(item, report=None):
+    if report is not None:
+        yield DURATION_FORMATTED, str(datetime.timedelta(seconds=getattr(report, 'duration', 0)))
 
 
-def column_markers(item, report):
+def column_markers(item, report=None):
     yield MARKERS, ','.join(format_mark_info(mark, False)
                             for mark in sorted(get_test_markers(item), key=lambda mark: mark.name))
 
 
-def column_markers_with_args(item, report):
+def column_markers_with_args(item, report=None):
     yield MARKERS, ','.join(format_mark_info(mark, True)
                             for mark in sorted(get_test_markers(item), key=lambda mark: mark.name))
 
 
-def column_markers_as_columns(item, report):
+def column_markers_as_columns(item, report=None):
     for mark in get_test_markers(item):
         yield mark.name, format_mark_info_args(mark) or str(True)
 
 
-def column_markers_args_as_columns(item, report):
+def column_markers_args_as_columns(item, report=None):
     for mark in get_test_markers(item):
         if not mark.args and not mark.kwargs:
             yield mark.name, str(True)
@@ -131,23 +136,25 @@ def column_markers_args_as_columns(item, report):
                 yield '%s.%s' % (mark.name, name), str(value)
 
 
-def column_parameters(item, report):
+def column_parameters(item, report=None):
     yield PARAMETERS, ','.join('%s=%s' % (k, v) for k, v in sorted(six.iteritems(get_test_args(item))))
 
 
-def column_parameters_as_columns(item, report):
+def column_parameters_as_columns(item, report=None):
     for name, value in six.iteritems(get_test_args(item)):
         yield name, str(value)
 
 
-def column_properties(item, report):
-    yield PROPERTIES, ','.join('%s=%s' % (k, v) for k, v in sorted(getattr(report, 'user_properties', [])))
+def column_properties(item, report=None):
+    if report is not None:
+        yield PROPERTIES, ','.join('%s=%s' % (k, v) for k, v in sorted(getattr(report, 'user_properties', [])))
 
 
-def column_properties_as_columns(item, report):
-    for name, value in sorted(getattr(report, 'user_properties', [])):
-        yield name, str(value)
+def column_properties_as_columns(item, report=None):
+    if report is not None:
+        for name, value in sorted(getattr(report, 'user_properties', [])):
+            yield name, str(value)
 
 
-def column_working_directory(item, report):
+def column_working_directory(item, report=None):
     yield WORKING_DIRECTORY, os.getcwd()

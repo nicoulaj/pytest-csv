@@ -36,6 +36,13 @@ class CSVReporter(object):
         self._rows = []
 
     @pytest.mark.hookwrapper
+    def pytest_collection_finish(self, session):
+        yield
+        for item in session.items:
+            self._rows.append({column_id: dict(column(item)) if callable(column) else {column_id: str(column)}
+                               for column_id, column in six.iteritems(self._columns)})
+
+    @pytest.mark.hookwrapper
     def pytest_runtest_makereport(self, item, call):
         outcome = yield
         report = outcome.get_result()

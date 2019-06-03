@@ -9,7 +9,7 @@ pytest-csv
    :target: https://pypi.org/project/pytest-csv
    :alt: pypi package
 
-.. image:: https://img.shields.io/badge/pytest-3.6%2B-green.svg
+.. image:: https://img.shields.io/badge/pytest-4.4%2B-green.svg
    :target: https://pytest.org
    :alt: pytest supported versions
 

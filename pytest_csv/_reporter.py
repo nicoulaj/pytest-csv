@@ -50,6 +50,19 @@ class CSVReporter(object):
         rows = getattr(report, '_csv_rows', None)
         if rows is not None:
             self._rows.append(rows)
+        elif report.when == '???':
+            # A worker crashed, and xdist called logreport with a fake report the master generated
+            rows = {}
+            for column_id, column in six.iteritems(self._columns):
+                if callable(column):
+                    try:
+                        column_val = dict(column(None, report))  # The item isn't available - the master doesn't run collection
+                    except Exception:
+                        column_val = {}
+                else:
+                    column_val = {column_id: str(column)}
+                rows[column_id] = column_val
+            self._rows.append(rows)
 
     def pytest_sessionfinish(self, session):
         if not self._rows or hasattr(session.config, 'slaveinput'):

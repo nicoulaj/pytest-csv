@@ -42,6 +42,12 @@ def pytest_csv_register_columns(columns):
 
         $ py.test --csv tests.csv --csv-columns id,status,my_constant_column,my_simple_column,my_multiple_columns
 
+    In certain situations, a (failure) line might need to be emitted for cases
+    where the original report was lost. For example, when an xdist test runner
+    crashes while running the test. In such cases, the column function will be
+    called with item=None and an artificially-generated test failure report;
+    if they throw an exception, the their column will be empty.
+
     :param columns: dictionary of (column id, CSVColumn object)
     """
 

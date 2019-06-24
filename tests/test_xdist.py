@@ -290,3 +290,47 @@ def test_with_xdist_custom_markers_args_as_columns(testdir):
         ('my_marker_03.a', '32'),
         ('my_marker_03.b', 'test'),
     ])
+
+
+def test_with_xdist_worker_crash_produces_row(testdir):
+    """Tests that a row is emitted even when the worker that ran the test crashed while running it"""
+    testdir.makepyfile('''
+        def test_01():
+            """Forces all the columns to appear in the csv file"""
+            pass
+    
+        def test_02():
+            """Crashes the worker"""
+            import os
+            os.kill(os.getpid(), 9)
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv', '-n', '1')
+
+    assert_outcomes(result, passed=1, failed=1)
+
+    assert_csv_equal(
+        'tests.csv',
+        [
+            (ID, r'.*test_with_xdist_worker_crash_produces_row.py::test_01'),
+            (MODULE, r'.*test_with_xdist_worker_crash_produces_row'),
+            (NAME, r'test_01+'),
+            (FILE, r'.*test_with_xdist_worker_crash_produces_row.py'),
+            (DOC, 'Forces all the columns to appear in the csv file'),
+            (MARKERS, ''),
+            (STATUS, PASSED),
+            (MESSAGE, ''),
+            (DURATION, r'.*'),
+        ],
+        [
+            (ID, r''),
+            (MODULE, r''),
+            (NAME, r''),
+            (FILE, r''),
+            (DOC, ''),
+            (MARKERS, ''),  # All empty up to this column because the item was lost
+            (STATUS, ERROR),
+            (MESSAGE, "worker '.*?' crashed while running '.*?'"),
+            (DURATION, r'.*'),
+        ],
+    )

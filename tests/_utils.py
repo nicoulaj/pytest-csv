@@ -29,16 +29,18 @@ __TAB_ARGS__ = dict(tablefmt='grid', headers='keys', showindex='always')
 
 
 def assert_outcomes(result, passed=0, skipped=0, failed=0, error=0, xpassed=0, xfailed=0):
-    if LooseVersion(pytest_version) < LooseVersion('3.8'):
-        result.assert_outcomes(passed=passed,
-                               skipped=skipped,
-                               failed=failed,
-                               error=error)
-    else:
+    if LooseVersion(pytest_version) < LooseVersion('6.0'):
         result.assert_outcomes(passed=passed,
                                skipped=skipped,
                                failed=failed,
                                error=error,
+                               xpassed=xpassed,
+                               xfailed=xfailed)
+    else:
+        result.assert_outcomes(passed=passed,
+                               skipped=skipped,
+                               failed=failed,
+                               errors=error,
                                xpassed=xpassed,
                                xfailed=xfailed)
 

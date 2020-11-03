@@ -82,7 +82,7 @@ def column_message(item, report):
         if hasattr(report, 'wasxfail'):
             yield MESSAGE, report.wasxfail
         else:
-            if hasattr(report.longrepr, 'reprcrash'):
+            if hasattr(report.longrepr, 'reprcrash') and hasattr(report.longrepr.reprcrash, 'message'):
                 yield MESSAGE, report.longrepr.reprcrash.message
             elif isinstance(report.longrepr, six.string_types):
                 yield MESSAGE, report.longrepr

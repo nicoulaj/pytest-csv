@@ -70,3 +70,28 @@ def test_xfail_with_message(testdir):
         (MESSAGE, r'.*this test is expected to fail.*'),
         (DURATION, r'.*'),
     ])
+
+
+def test_fail_with_message_without_trace(testdir):
+    testdir.makepyfile('''
+        import pytest
+
+        def test_01():
+            pytest.fail('this test fails', pytrace=False)
+    ''')
+
+    result = testdir.runpytest('--csv', 'tests.csv')
+
+    assert_outcomes(result, failed=1)
+
+    assert_csv_equal('tests.csv', [
+        (ID, '.*test_fail_with_message_without_trace.py::test_01'),
+        (MODULE, r'.*test_fail_with_message_without_trace'),
+        (NAME, 'test_01'),
+        (FILE, r'.*test_fail_with_message_without_trace.py'),
+        (DOC, ''),
+        (MARKERS, ''),
+        (STATUS, FAILED),
+        (MESSAGE, r'.*this test fails.*'),
+        (DURATION, r'.*'),
+    ])

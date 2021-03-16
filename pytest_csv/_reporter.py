@@ -77,7 +77,7 @@ class CSVReporter(object):
                                               for header in six.iterkeys(row[column_id]))))
                    for column_id in six.iterkeys(self._columns)}
 
-        with open(self._csv_path, 'w') as out:
+        with open(self._csv_path, 'w', newline='') as out:
             writer = csv.writer(out, delimiter=self._delimiter, quotechar=self._quote_char, quoting=csv.QUOTE_MINIMAL)
 
             writer.writerow([header

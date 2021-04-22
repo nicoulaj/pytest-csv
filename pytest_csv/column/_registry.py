@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-import getpass
 import platform
 
 from ._builtin import *
@@ -44,7 +43,7 @@ BUILTIN_COLUMNS_REGISTRY = {
     PROPERTIES: column_properties,
     PROPERTIES_AS_COLUMNS: column_properties_as_columns,
     HOST: platform.node(),
-    USER: getpass.getuser(),
+    USER: column_user,
     SYSTEM: platform.system(),
     SYSTEM_RELEASE: platform.release(),
     SYSTEM_VERSION: platform.version(),

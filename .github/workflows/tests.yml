@@ -50,7 +50,7 @@ jobs:
           pip install tox tox-gh-actions
 
       - name: Run tests
-        run: tox -vvv
+        run: tox
         env:
           PYTEST: ${{ matrix.pytest }}
           XDIST: ${{ matrix.xdist }}

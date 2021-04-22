@@ -32,6 +32,18 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: Set up pip cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ matrix.os }}-pip
+
+      - name: Set up tox cache
+        uses: actions/cache@v2
+        with:
+          path: .tox
+          key: ${{ matrix.os }}-py${{ matrix.python }}-pytest${{ matrix.pytest }}-xdist${{ matrix.xdist }}-tox
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

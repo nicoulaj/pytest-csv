@@ -40,25 +40,25 @@ setup(
         'Operating System :: POSIX',
         'Operating System :: Unix',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'License :: OSI Approved :: GNU General Public License (GPL)'
     ],
     packages=find_packages(exclude=['tests*']),
     install_requires=[
-        'pytest>=4.4',
+        'pytest>=6.0',
         'six>=1.0.0'
     ],
     extras_require={
         'test': [
-            'pytest-xdist>=1.28.0',
+            'pytest-xdist>=1.29.0',
             'tabulate>=0.8.2'
         ]
     },

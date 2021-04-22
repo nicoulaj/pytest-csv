@@ -49,7 +49,9 @@ jobs:
       - name: Set up tox cache
         uses: actions/cache@v2
         with:
-          path: .tox
+          path: |
+            .tox
+            !.tox/**/tmp
           key: ${{ matrix.os.name }}-py${{ matrix.python }}-pytest${{ matrix.pytest }}-xdist${{ matrix.xdist }}-tox-${{ hashFiles('setup.py') }}-${{ hashFiles('tox.ini') }}
           restore-keys: |
             ${{ matrix.os.name }}-py${{ matrix.python }}-pytest${{ matrix.pytest }}-xdist${{ matrix.xdist }}-tox-

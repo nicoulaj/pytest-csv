@@ -20,6 +20,7 @@ import platform
 
 from ._builtin import *
 from ._ids import *
+from ._utils import get_user
 
 BUILTIN_COLUMNS_REGISTRY = {
     ID: column_id,
@@ -43,7 +44,7 @@ BUILTIN_COLUMNS_REGISTRY = {
     PROPERTIES: column_properties,
     PROPERTIES_AS_COLUMNS: column_properties_as_columns,
     HOST: platform.node(),
-    USER: column_user,
+    USER: get_user(),
     SYSTEM: platform.system(),
     SYSTEM_RELEASE: platform.release(),
     SYSTEM_VERSION: platform.version(),

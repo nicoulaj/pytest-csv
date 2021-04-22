@@ -19,3 +19,4 @@
 from ._ids import *
 from ._registry import BUILTIN_COLUMNS_REGISTRY
 from ._status import *
+from ._utils import get_user

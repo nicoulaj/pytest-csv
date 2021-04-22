@@ -17,7 +17,6 @@
 # ----------------------------------------------------------------------
 
 import datetime
-import getpass
 import os
 
 import six
@@ -26,14 +25,6 @@ from ._ids import *
 from ._status import *
 from ._utils import parse_node_id, get_test_doc, get_test_args, get_test_markers, format_mark_info, \
     format_mark_info_args
-
-
-def column_user(item, report):
-    try:
-        yield USER, getpass.getuser()
-    except:
-        # workaround for https://bugs.python.org/issue32731
-        yield USER, os.path.basename(os.path.expanduser("~"))
 
 
 def column_id(item, report):

@@ -16,12 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
+import getpass
+import re
 from itertools import chain
 
-import re
+import os
 import six
 
-__NODE_ID__ = re.compile(r'(?P<module>.+)\.py(?:::(?P<class>[^:]+)(?:::.+)?)?::(?P<function>[^\[]+)(?:\[(?P<params>.*)\])?')
+__NODE_ID__ = re.compile(
+    r'(?P<module>.+)\.py(?:::(?P<class>[^:]+)(?:::.+)?)?::(?P<function>[^\[]+)(?:\[(?P<params>.*)\])?')
 
 
 def parse_node_id(node_id):
@@ -32,6 +35,14 @@ def parse_node_id(node_id):
                match.group('function'), \
                match.group('params') or ''
     raise Exception('Failed parsing pytest node id: "%s"' % node_id)
+
+
+def get_user():
+    try:
+        return getpass.getuser()
+    except:
+        # workaround for https://bugs.python.org/issue32731
+        return os.path.basename(os.path.expanduser("~"))
 
 
 def get_test_doc(item):

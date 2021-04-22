@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-import getpass
 import platform
 
 from pytest_csv.column import *
@@ -57,7 +56,7 @@ def test_column_user(testdir):
         (MODULE, r'.*test_column_user'),
         (NAME, 'test_01'),
         (STATUS, PASSED),
-        (USER, getpass.getuser()),
+        (USER, get_user()),
     ])
 
 

@@ -169,7 +169,7 @@ def test_named_test(testdir):
     assert_outcomes(result, passed=1)
 
     assert_csv_equal('tests.csv', [
-        (MODULE, 'mytest'),
+        (MODULE, r'.*mytest'),
         (NAME, 'test_01'),
         (STATUS, PASSED),
     ])

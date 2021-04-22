@@ -17,6 +17,9 @@
 # ----------------------------------------------------------------------
 
 import platform
+import sys
+
+import pytest
 
 from pytest_csv.column import *
 from ._utils import assert_csv_equal
@@ -41,6 +44,7 @@ def test_column_host(testdir):
     ])
 
 
+@pytest.mark.skipif(sys.platform == 'win32', reason='get_user() is not reliable on windows')
 def test_column_user(testdir):
     testdir.makepyfile('''
         def test_01():

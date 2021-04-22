@@ -42,13 +42,17 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ matrix.os.name }}-pip
+          key: ${{ matrix.os.name }}-pip-${{ hashFiles('setup.py') }}-${{ hashFiles('tox.ini') }}
+          restore-keys: |
+            ${{ matrix.os.name }}-pip-
 
       - name: Set up tox cache
         uses: actions/cache@v2
         with:
           path: .tox
-          key: ${{ matrix.os.name }}-py${{ matrix.python }}-pytest${{ matrix.pytest }}-xdist${{ matrix.xdist }}-tox
+          key: ${{ matrix.os.name }}-py${{ matrix.python }}-pytest${{ matrix.pytest }}-xdist${{ matrix.xdist }}-tox-${{ hashFiles('setup.py') }}-${{ hashFiles('tox.ini') }}
+          restore-keys: |
+            ${{ matrix.os.name }}-py${{ matrix.python }}-pytest${{ matrix.pytest }}-xdist${{ matrix.xdist }}-tox-
 
       - name: Install dependencies
         run: |

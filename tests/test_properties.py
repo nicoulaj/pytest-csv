@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------
 # pytest-csv - https://github.com/nicoulaj/pytest-csv
-# copyright (c) 2018-2019 pytest-csv contributors
+# copyright (c) 2018-2021 pytest-csv contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ def test_record_property_as_columns(testdir):
     testdir.makepyfile('''
         def test_01(record_property):
             pass
-            
+
         def test_02(record_property):
             record_property("example_key", 1)
     ''')

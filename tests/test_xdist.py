@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------
 # pytest-csv - https://github.com/nicoulaj/pytest-csv
-# copyright (c) 2018-2019 pytest-csv contributors
+# copyright (c) 2018-2021 pytest-csv contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,10 +50,10 @@ def test_with_xdist_several_tests(testdir):
     testdir.makepyfile('''
         def test_01():
             pass
-            
+
         def test_02():
             pass
-            
+
         def test_03():
             pass
     ''')
@@ -166,10 +166,10 @@ def test_with_xdist_properties(testdir):
 def test_with_xdist_properties_non_serializable(testdir):
     testdir.makepyfile('''
         def test_01(record_property):
-        
+
             class MyClass(object):
                 pass
-        
+
             record_property("example_key", MyClass)
     ''')
 
@@ -298,7 +298,7 @@ def test_with_xdist_worker_crash_produces_row(testdir):
         def test_01():
             """Forces all the columns to appear in the csv file"""
             pass
-    
+
         def test_02():
             """Crashes the worker"""
             import os

@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------
 # pytest-csv - https://github.com/nicoulaj/pytest-csv
-# copyright (c) 2018-2019 pytest-csv contributors
+# copyright (c) 2018-2021 pytest-csv contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -69,11 +69,11 @@ def test_failed(testdir):
 def test_error(testdir):
     testdir.makepyfile('''
         import pytest
-    
+
         @pytest.fixture
         def some_fixture():
             raise Exception('this fixture is broken')
-    
+
         def test_01(some_fixture):
             pass
     ''')
@@ -129,7 +129,7 @@ def test_skipped_whole_module(testdir):
 
         def test_01():
             pass
-            
+
         def test_02():
             pass
     ''')

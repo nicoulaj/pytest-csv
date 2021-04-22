@@ -154,3 +154,22 @@ def test_custom_quote_char(testdir):
     with open('tests.csv') as csv:
         text = csv.read()
         assert "'This is a test" in text
+
+
+def test_named_test(testdir):
+    testdir.makepyfile(mytest='''
+        def test_01():
+            pass
+    ''')
+
+    result = testdir.runpytest('mytest.py::test_01',
+                               '--csv', 'tests.csv',
+                               '--csv-columns', 'module,name,status')
+
+    assert_outcomes(result, passed=1)
+
+    assert_csv_equal('tests.csv', [
+        (MODULE, 'mytest'),
+        (NAME, 'test_01'),
+        (STATUS, PASSED),
+    ])

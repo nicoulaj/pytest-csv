@@ -9,12 +9,12 @@ pytest-csv
    :target: https://pypi.org/project/pytest-csv
    :alt: pypi package
 
-.. image:: https://img.shields.io/badge/pytest-4.4%2B-green.svg
+.. image:: https://img.shields.io/badge/pytest-6.0%2B-green.svg
    :target: https://pytest.org
    :alt: pytest supported versions
 
-.. image:: https://travis-ci.org/nicoulaj/pytest-csv.svg?branch=master
-   :target: https://travis-ci.org/nicoulaj/pytest-csv
+.. image:: https://github.com/nicoulaj/pytest-csv/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/nicoulaj/pytest-csv/actions
    :alt: continuous integration
 
 ----

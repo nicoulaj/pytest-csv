@@ -1,0 +1,36 @@
+# ----------------------------------------------------------------------
+# pytest-csv - https://github.com/nicoulaj/pytest-csv
+# copyright (c) 2018-2019 pytest-csv contributors
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# ----------------------------------------------------------------------
+
+from ._utils import assert_outcomes
+
+
+def test_flake8_enabled_01(testdir):
+    testdir.makefile(".cfg", setup='''
+        [tool:pytest]
+        flake8-ignore = W292
+    ''')
+
+    testdir.makepyfile('''
+        def test_01():
+            pass
+    ''')
+
+    result = testdir.runpytest('--flake8',
+                               '--csv', 'tests.csv')
+
+    assert_outcomes(result, passed=2)

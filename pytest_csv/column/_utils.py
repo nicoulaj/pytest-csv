@@ -35,7 +35,10 @@ def parse_node_id(node_id):
 
 
 def get_test_doc(item):
-    return item.obj.__doc__ or ''
+    try:
+        return item.obj.__doc__ or ''
+    except AttributeError:
+        return ''
 
 
 def get_test_args(item):

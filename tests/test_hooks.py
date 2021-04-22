@@ -19,7 +19,7 @@
 import os
 
 from pytest_csv.column import *
-from ._utils import assert_csv_equal, assert_outcomes
+from ._utils import assert_csv_equal
 
 
 def test_register_custom_column_constant(testdir):
@@ -36,7 +36,7 @@ def test_register_custom_column_constant(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,my_column')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_register_custom_column_constant.py::test_01'),
@@ -58,7 +58,7 @@ def test_register_custom_column_lambda(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,my_column')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_register_custom_column_lambda.py::test_01'),
@@ -84,7 +84,7 @@ def test_register_custom_column_function(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,my_column')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_register_custom_column_function.py::test_01'),
@@ -111,7 +111,7 @@ def test_register_custom_column_generator(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,my_columns')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_register_custom_column_generator.py::test_01'),
@@ -135,6 +135,6 @@ def test_csv_written(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert os.path.exists('tests.csv.1')

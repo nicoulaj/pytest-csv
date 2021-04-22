@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv.column import *
-from ._utils import assert_csv_equal, assert_outcomes
+from ._utils import assert_csv_equal
 
 
 def test_custom_columns_01(testdir):
@@ -29,7 +29,7 @@ def test_custom_columns_01(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module,name,status')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_custom_columns_01'),
@@ -47,7 +47,7 @@ def test_custom_columns_02(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module', 'name', 'status')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_custom_columns_02'),
@@ -65,7 +65,7 @@ def test_custom_columns_03(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'module,name', 'status')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_custom_columns_03'),
@@ -83,7 +83,7 @@ def test_custom_columns_04(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', ' module  , name', ' status')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*test_custom_columns_04'),
@@ -101,7 +101,7 @@ def test_add_columns_01(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-add-columns', 'host,user')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_add_columns_01.py::test_01'),
@@ -127,7 +127,7 @@ def test_custom_delimiter(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-delimiter', '|')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     with open('tests.csv') as csv:
         text = csv.read()
@@ -149,7 +149,7 @@ def test_custom_quote_char(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-quote-char', "'")
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     with open('tests.csv') as csv:
         text = csv.read()
@@ -166,7 +166,7 @@ def test_named_test(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'module,name,status')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (MODULE, r'.*mytest'),

@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv.column import *
-from ._utils import assert_csv_equal, assert_outcomes
+from ._utils import assert_csv_equal
 
 
 def test_several_tests(testdir):
@@ -34,7 +34,7 @@ def test_several_tests(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    assert_outcomes(result, passed=3)
+    result.assert_outcomes(passed=3)
 
     assert_csv_equal(
         'tests.csv',

@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv.column import *
-from ._utils import assert_csv_equal, assert_outcomes
+from ._utils import assert_csv_equal
 
 
 def test_skipped_with_message(testdir):
@@ -31,7 +31,7 @@ def test_skipped_with_message(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    assert_outcomes(result, skipped=1)
+    result.assert_outcomes(skipped=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_skipped_with_message.py::test_01'),
@@ -57,7 +57,7 @@ def test_xfail_with_message(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    assert_outcomes(result, xfailed=1)
+    result.assert_outcomes(xfailed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_xfail_with_message.py::test_01'),
@@ -82,7 +82,7 @@ def test_fail_with_message_without_trace(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    assert_outcomes(result, failed=1)
+    result.assert_outcomes(failed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_fail_with_message_without_trace.py::test_01'),

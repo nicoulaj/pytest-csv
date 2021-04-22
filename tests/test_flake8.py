@@ -16,8 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ----------------------------------------------------------------------
 
-from ._utils import assert_outcomes
-
 
 def test_flake8_enabled_01(testdir):
     testdir.makefile(".cfg", setup='''
@@ -33,4 +31,4 @@ def test_flake8_enabled_01(testdir):
     result = testdir.runpytest('--flake8',
                                '--csv', 'tests.csv')
 
-    assert_outcomes(result, passed=2)
+    result.assert_outcomes(passed=2)

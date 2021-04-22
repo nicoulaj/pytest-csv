@@ -20,7 +20,7 @@ import pytest
 from _pytest import junitxml
 
 from pytest_csv.column import *
-from ._utils import assert_csv_equal, assert_outcomes
+from ._utils import assert_csv_equal
 
 
 def test_with_xdist(testdir):
@@ -31,7 +31,7 @@ def test_with_xdist(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '-n', '2')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_with_xdist.py::test_01'),
@@ -60,7 +60,7 @@ def test_with_xdist_several_tests(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '-n', '2')
 
-    assert_outcomes(result, passed=3)
+    result.assert_outcomes(passed=3)
 
     assert_csv_equal(
         'tests.csv',
@@ -117,7 +117,7 @@ def test_with_xdist_parametrized(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'id,parameters_as_columns')
 
-    assert_outcomes(result, passed=3)
+    result.assert_outcomes(passed=3)
 
     assert_csv_equal(
         'tests.csv',
@@ -150,7 +150,7 @@ def test_with_xdist_properties(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'id,properties_as_columns')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal(
         'tests.csv',
@@ -177,7 +177,7 @@ def test_with_xdist_properties_non_serializable(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'id,properties_as_columns')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal(
         'tests.csv',
@@ -204,7 +204,7 @@ def test_with_xdist_parametrized_non_serializable_parameters(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'id,parameters')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal(
         'tests.csv',
@@ -230,7 +230,7 @@ def test_with_xdist_custom_markers_with_args(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'id,markers_with_args')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, r'.*test_with_xdist_custom_markers_with_args.py::test_01'),
@@ -253,7 +253,7 @@ def test_with_xdist_custom_markers_as_columns(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'id,markers_as_columns')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_with_xdist_custom_markers_as_columns.py::test_01'),
@@ -278,7 +278,7 @@ def test_with_xdist_custom_markers_args_as_columns(testdir):
                                '--csv', 'tests.csv',
                                '--csv-columns', 'id,markers_args_as_columns')
 
-    assert_outcomes(result, passed=1)
+    result.assert_outcomes(passed=1)
 
     assert_csv_equal('tests.csv', [
         (ID, '.*test_with_xdist_custom_markers_args_as_columns.py::test_01'),
@@ -307,7 +307,7 @@ def test_with_xdist_worker_crash_produces_row(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv', '-n', '1')
 
-    assert_outcomes(result, passed=1, failed=1)
+    result.assert_outcomes(passed=1, failed=1)
 
     assert_csv_equal(
         'tests.csv',

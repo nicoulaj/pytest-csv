@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------
 
 from pytest_csv.column import *
-from ._utils import assert_csv_equal, assert_outcomes
+from ._utils import assert_csv_equal
 
 
 def test_with_parameters(testdir):
@@ -34,7 +34,7 @@ def test_with_parameters(testdir):
 
     result = testdir.runpytest('--csv', 'tests.csv')
 
-    assert_outcomes(result, passed=3)
+    result.assert_outcomes(passed=3)
 
     assert_csv_equal(
         'tests.csv',
@@ -89,7 +89,7 @@ def test_with_parameters_column(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,parameters')
 
-    assert_outcomes(result, passed=3)
+    result.assert_outcomes(passed=3)
 
     assert_csv_equal(
         'tests.csv',
@@ -123,7 +123,7 @@ def test_with_parameters_as_columns(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,parameters_as_columns')
 
-    assert_outcomes(result, passed=3)
+    result.assert_outcomes(passed=3)
 
     assert_csv_equal(
         'tests.csv',
@@ -160,7 +160,7 @@ def test_with_parameters_as_columns_and_fixtures(testdir):
     result = testdir.runpytest('--csv', 'tests.csv',
                                '--csv-columns', 'id,parameters_as_columns')
 
-    assert_outcomes(result, passed=3)
+    result.assert_outcomes(passed=3)
 
     assert_csv_equal(
         'tests.csv',

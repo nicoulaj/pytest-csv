@@ -26,6 +26,13 @@ from tabulate import tabulate
 __TAB_ARGS__ = dict(tablefmt='grid', headers='keys', showindex='always')
 
 
+def assert_no_blank_line(file):
+    with open(file, 'r') as infile:
+        for line in infile:
+            if not line.strip():
+                raise AssertionError('%s contains blank lines' % file)
+
+
 def assert_csv_equal(actual_csv_path, *expected_csv_rows):
     with open(actual_csv_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)

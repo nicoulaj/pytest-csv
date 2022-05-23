@@ -65,7 +65,7 @@ class CSVReporter(object):
             self._rows.append(rows)
 
     def pytest_sessionfinish(self, session):
-        if not self._rows or hasattr(session.config, 'slaveinput'):
+        if not self._rows or hasattr(session.config, 'slaveinput') or hasattr(session.config, 'workerinput'):
             return
 
         directory = os.path.dirname(self._csv_path)

@@ -77,6 +77,11 @@ class CSVReporter(object):
                                               for header in six.iterkeys(row[column_id]))))
                    for column_id in six.iterkeys(self._columns)}
 
+        #find id column
+        scan_id_key = 'id'
+
+        id_index = list(headers.keys()).index(scan_id_key)  if "'"+ scan_id_key + "'" in str(headers.keys()) else -1
+
         with open(self._csv_path, 'w', newline='', encoding="utf-8") as out:
             writer = csv.writer(out, delimiter=self._delimiter, quotechar=self._quote_char, quoting=csv.QUOTE_MINIMAL)
 
@@ -84,11 +89,28 @@ class CSVReporter(object):
                              for column_id in six.iterkeys(self._columns)
                              for header in headers[column_id]])
 
-            for row in self._rows:
-                writer.writerow([row[column_id].get(header, '')
-                                 for column_id in six.iterkeys(self._columns)
-                                 for header in headers[column_id]])
+            if id_index == -1:
+                #if id column not founded
+                for row in self._rows:
+                    writer.writerow([row[column_id].get(header, '')
+                                    for column_id in six.iterkeys(self._columns)
+                                    for header in headers[column_id]])
+            else:
+                temp_lst = list()
+                session_lst = list()
+                for row in self._rows:
+                    #move csv data to temporary list
+                    temp_lst.append([row[column_id].get(header, '')
+                                    for column_id in six.iterkeys(self._columns)
+                                    for header in headers[column_id]])
 
+                # extract nodeid from sessions.items classes
+                for node in session.items:
+                    session_lst.append(node.nodeid)
+
+                # write the in-out-sync orders csv output
+                writer.writerows(sorted(temp_lst, key = lambda i:session_lst.index(i[id_index])))
+            
         session.config.hook.pytest_csv_written(csv_path=self._csv_path)
 
     def pytest_terminal_summary(self, terminalreporter):

@@ -70,8 +70,7 @@ def pytest_addoption(parser):
     group.addoption(
         '--csv-xdist-sort',
         dest='csv_xdist_sort',
-        action='store',
-        metavar='xdist sort',
+        action='store_true',
         default= False,
         help='sort and match --co with xdist output in CSV files'
     )
@@ -83,10 +82,6 @@ def pytest_addhooks(pluginmanager):
 def pytest_configure(config):
     csv_path = config.option.csv_path
     if csv_path:
-        if config.option.csv_xdist_sort == 'True' or config.option.csv_xdist_sort == 'true':
-            csv_xdist_sort = bool(config.option.csv_xdist_sort)
-        else:
-            csv_xdist_sort = False
 
         columns_registry = dict(BUILTIN_COLUMNS_REGISTRY)
         config.hook.pytest_csv_register_columns(columns=columns_registry)
@@ -100,7 +95,7 @@ def pytest_configure(config):
                                            columns=columns,
                                            delimiter=config.option.csv_delimiter,
                                            quote_char=config.option.csv_quote_char,
-                                           xdist_sort= csv_xdist_sort)
+                                           xdist_sort= config.option.csv_xdist_sort)
         config.pluginmanager.register(config._csv_reporter)
 
 

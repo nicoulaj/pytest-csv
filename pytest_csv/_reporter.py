@@ -112,7 +112,7 @@ class CSVReporter(object):
 
                 # write the in-out-sync orders csv output
                 writer.writerows(sorted(temp_lst, key = lambda i:session_lst.index(i[id_index])))
-            
+
         session.config.hook.pytest_csv_written(csv_path=self._csv_path)
 
     def pytest_terminal_summary(self, terminalreporter):

@@ -35,7 +35,7 @@ class CSVReporter(object):
         self._quote_char = quote_char
         self._rows = []
 
-    @pytest.mark.hookwrapper
+    @pytest.hookimpl(hookwrapper=True)
     def pytest_runtest_makereport(self, item, call):
         outcome = yield
         report = outcome.get_result()
